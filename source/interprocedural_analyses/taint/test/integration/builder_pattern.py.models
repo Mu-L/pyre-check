@@ -180,15 +180,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{builder_pattern.Builder::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -199,15 +197,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{object::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -218,15 +214,13 @@
   "kind": "model",
   "data": {
     "callable": "builder_pattern.Builder.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -237,7 +231,6 @@
   "kind": "model",
   "data": {
     "callable": "builder_pattern.Builder.async_save",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[_saved]",
@@ -254,23 +247,22 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "builder_pattern.Builder.set_not_saved",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(not_saved)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[_not_saved]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[_not_saved]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -279,7 +271,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -290,15 +282,15 @@
   "kind": "model",
   "data": {
     "callable": "builder_pattern.Builder.set_not_saved_through_typevar",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(not_saved)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[_not_saved]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[_not_saved]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -307,7 +299,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -318,15 +310,15 @@
   "kind": "model",
   "data": {
     "callable": "builder_pattern.Builder.set_saved",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(saved)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[_saved]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[_saved]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -335,7 +327,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -346,15 +338,15 @@
   "kind": "model",
   "data": {
     "callable": "builder_pattern.Builder.set_saved_through_typevar",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(saved)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[_saved]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[_saved]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -363,7 +355,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }

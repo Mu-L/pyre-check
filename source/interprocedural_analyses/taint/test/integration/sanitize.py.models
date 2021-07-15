@@ -351,7 +351,7 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "sanitize.C_sanitized_all_sinks.attribute"
+                "name": "Obj{sanitize.C_sanitized_all_sinks.attribute}"
               }
             ]
           }
@@ -401,7 +401,7 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "sanitize.C_sanitized_all_sinks.instance"
+                "name": "Obj{sanitize.C_sanitized_all_sinks.instance}"
               }
             ]
           }
@@ -675,8 +675,143 @@
 {
   "kind": "model",
   "data": {
+    "callable": "Obj{sanitize.C_sanitized_a_sink.attribute}",
+    "sanitize": { "sinks": [ "TestA" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_a_sink.instance}",
+    "sanitize": { "sinks": [ "TestA" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_a_source.attribute}",
+    "sanitize": { "sources": [ "TestA" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_a_source.instance}",
+    "sanitize": { "sources": [ "TestA" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_ab_sinks.attribute}",
+    "sanitize": { "sinks": [ "TestA", "TestB" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_ab_sinks.instance}",
+    "sanitize": { "sinks": [ "TestA", "TestB" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_ab_sources.attribute}",
+    "sources": [
+      {
+        "port": "result",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
+      }
+    ],
+    "sanitize": { "sources": [ "TestA", "TestB" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_ab_sources.instance}",
+    "sources": [
+      {
+        "port": "result",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
+      }
+    ],
+    "sanitize": { "sources": [ "TestA", "TestB" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_all_sinks.attribute}",
+    "sinks": [
+      {
+        "port": "formal($global)",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
+      }
+    ],
+    "sanitize": { "sinks": "All" }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_all_sinks.instance}",
+    "sinks": [
+      {
+        "port": "formal($global)",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
+      }
+    ],
+    "sanitize": { "sinks": "All" }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_all_sources.attribute}",
+    "sanitize": { "sources": "All" }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_all_sources.instance}",
+    "sanitize": { "sources": "All" }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_b_sink.attribute}",
+    "sanitize": { "sinks": [ "TestB" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_b_sink.instance}",
+    "sanitize": { "sinks": [ "TestB" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_b_source.attribute}",
+    "sanitize": { "sources": [ "TestB" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{sanitize.C_sanitized_b_source.instance}",
+    "sanitize": { "sources": [ "TestB" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
     "callable": "Ovr{object::__init__}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(value)",
@@ -691,11 +826,11 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "sanitize.C_sanitized_all_sinks.attribute"
+                "name": "Obj{sanitize.C_sanitized_all_sinks.attribute}"
               },
               {
                 "kind": "Test",
-                "name": "sanitize.C_sanitized_all_sinks.instance"
+                "name": "Obj{sanitize.C_sanitized_all_sinks.instance}"
               }
             ]
           }
@@ -709,8 +844,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -720,7 +855,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -731,8 +866,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{sanitize.C_sanitized_a_sink::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -740,8 +873,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -751,7 +884,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -762,8 +895,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{sanitize.C_sanitized_a_source::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -771,8 +902,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -782,7 +913,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -793,8 +924,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{sanitize.C_sanitized_ab_sinks::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -802,8 +931,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -813,7 +942,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -824,8 +953,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{sanitize.C_sanitized_ab_sources::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -833,8 +960,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -844,7 +971,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -855,7 +982,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{sanitize.C_sanitized_all_sinks::__init__}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(value)",
@@ -870,11 +996,11 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "sanitize.C_sanitized_all_sinks.attribute"
+                "name": "Obj{sanitize.C_sanitized_all_sinks.attribute}"
               },
               {
                 "kind": "Test",
-                "name": "sanitize.C_sanitized_all_sinks.instance"
+                "name": "Obj{sanitize.C_sanitized_all_sinks.instance}"
               }
             ]
           }
@@ -888,8 +1014,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -899,7 +1025,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -910,8 +1036,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{sanitize.C_sanitized_all_sources::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -919,8 +1043,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -930,7 +1054,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -941,8 +1065,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{sanitize.C_sanitized_b_sink::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -950,8 +1072,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -961,7 +1083,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -972,8 +1094,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{sanitize.C_sanitized_b_source::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -981,8 +1101,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -992,7 +1112,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1003,8 +1123,6 @@
   "kind": "model",
   "data": {
     "callable": "sanitize.C_sanitized_a_sink.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -1012,8 +1130,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -1023,7 +1141,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1034,8 +1152,6 @@
   "kind": "model",
   "data": {
     "callable": "sanitize.C_sanitized_a_source.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -1043,8 +1159,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -1054,7 +1170,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1065,8 +1181,6 @@
   "kind": "model",
   "data": {
     "callable": "sanitize.C_sanitized_ab_sinks.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -1074,8 +1188,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -1085,7 +1199,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1096,8 +1210,6 @@
   "kind": "model",
   "data": {
     "callable": "sanitize.C_sanitized_ab_sources.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -1105,8 +1217,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -1116,7 +1228,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1127,7 +1239,6 @@
   "kind": "model",
   "data": {
     "callable": "sanitize.C_sanitized_all_sinks.__init__",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(value)",
@@ -1142,7 +1253,7 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "sanitize.C_sanitized_all_sinks.instance"
+                "name": "Obj{sanitize.C_sanitized_all_sinks.instance}"
               }
             ]
           },
@@ -1156,7 +1267,7 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "sanitize.C_sanitized_all_sinks.attribute"
+                "name": "Obj{sanitize.C_sanitized_all_sinks.attribute}"
               }
             ]
           }
@@ -1170,8 +1281,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -1181,7 +1292,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1192,8 +1303,6 @@
   "kind": "model",
   "data": {
     "callable": "sanitize.C_sanitized_all_sources.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -1201,8 +1310,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -1212,7 +1321,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1223,8 +1332,6 @@
   "kind": "model",
   "data": {
     "callable": "sanitize.C_sanitized_b_sink.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -1232,8 +1339,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -1243,7 +1350,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1254,8 +1361,6 @@
   "kind": "model",
   "data": {
     "callable": "sanitize.C_sanitized_b_source.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -1263,8 +1368,8 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[instance]" },
-              { "kind": "LocalReturn", "name": "[attribute]" }
+              { "kind": "LocalReturn", "name": "[instance]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[attribute]", "depth": 0 }
             ]
           }
         ]
@@ -1274,7 +1379,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1285,14 +1390,13 @@
   "kind": "model",
   "data": {
     "callable": "sanitize.a_sink",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
         "taint": [ { "decl": null, "leaves": [ { "kind": "TestA" } ] } ]
       }
     ],
-    "tito": []
+    "modes": [ "Obscure" ]
   }
 }
 {
@@ -1305,22 +1409,20 @@
         "taint": [ { "decl": null, "leaves": [ { "kind": "TestA" } ] } ]
       }
     ],
-    "sinks": [],
-    "tito": []
+    "modes": [ "Obscure" ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.b_sink",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
         "taint": [ { "decl": null, "leaves": [ { "kind": "TestB" } ] } ]
       }
     ],
-    "tito": []
+    "modes": [ "Obscure" ]
   }
 }
 {
@@ -1333,15 +1435,13 @@
         "taint": [ { "decl": null, "leaves": [ { "kind": "TestB" } ] } ]
       }
     ],
-    "sinks": [],
-    "tito": []
+    "modes": [ "Obscure" ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.propagation_of_b_sink",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -1359,8 +1459,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -1384,16 +1483,34 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "sanitize.return_taint_sanitize",
+    "sanitize": { "sources": "All", "sinks": "All", "tito": "All" }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "sanitize.sanitize_a_and_b_sinks",
+    "sanitize": { "sinks": [ "TestA", "TestB" ] }
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "sanitize.sanitize_a_and_b_source",
+    "sanitize": { "sources": [ "TestA", "TestB" ] }
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_a_sink",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -1410,14 +1527,13 @@
         ]
       }
     ],
-    "tito": []
+    "sanitize": { "sinks": [ "TestA" ] }
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_a_sink_attribute",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(c)[attribute]",
@@ -1433,15 +1549,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_a_sink_instance",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(c)[instance]",
@@ -1457,53 +1571,49 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_a_sink_tito",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(x)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
-    ]
+    ],
+    "sanitize": { "tito_sources": [], "tito_sinks": [ "TestA" ] }
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_a_tito",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(x)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
-    ]
+    ],
+    "sanitize": { "tito_sources": [ "TestA" ], "tito_sinks": [] }
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_a_tito_with_sink",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -1526,18 +1636,18 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
-    ]
+    ],
+    "sanitize": { "tito_sources": [ "TestA" ], "tito_sinks": [] }
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_b_sink",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -1554,14 +1664,13 @@
         ]
       }
     ],
-    "tito": []
+    "sanitize": { "sinks": [ "TestB" ] }
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_b_sink_attribute",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(c)[attribute]",
@@ -1577,15 +1686,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_b_sink_instance",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(c)[instance]",
@@ -1601,8 +1708,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -1627,7 +1733,6 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(x)",
@@ -1635,19 +1740,19 @@
           {
             "decl": null,
             "tito": [ { "line": 113, "start": 28, "end": 29 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
       }
-    ]
+    ],
+    "sanitize": { "sinks": "All" }
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "sanitize.sanitize_sources",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -1672,12 +1777,13 @@
           {
             "decl": null,
             "tito": [ { "line": 108, "start": 28, "end": 29 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
       }
-    ]
+    ],
+    "sanitize": { "sources": "All" }
   }
 }
 {
@@ -1700,8 +1806,7 @@
         ]
       }
     ],
-    "sinks": [],
-    "tito": []
+    "sanitize": { "sources": [ "TestA" ] }
   }
 }
 {
@@ -1724,8 +1829,7 @@
         ]
       }
     ],
-    "sinks": [],
-    "tito": []
+    "sanitize": { "sources": [ "TestB" ] }
   }
 }
 {
@@ -1767,7 +1871,7 @@
         ]
       }
     ],
-    "tito": []
+    "sanitize": { "tito": "All" }
   }
 }
 {
@@ -1780,14 +1884,13 @@
         "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(x)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }

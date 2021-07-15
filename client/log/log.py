@@ -203,22 +203,19 @@ def initialize(noninteractive: bool) -> None:
     logging.basicConfig(level=logging.DEBUG, handlers=[stream_handler])
 
 
-def start_logging_to_directory(noninteractive: bool, log_directory: str) -> None:
-    if not noninteractive and log_directory is not None:
-        if not os.path.exists(log_directory):
-            os.makedirs(log_directory)
-        handler = logging.handlers.RotatingFileHandler(
-            os.path.join(log_directory, "pyre.stderr"),
-            mode="a",
-            # Keep at most 5 log files on disk
-            backupCount=4,
-            # Limit the size of each log file to 10MB
-            maxBytes=10 * 1000 * 1000,
-        )
-        handler.setFormatter(SectionFormatter())
-        handler.setLevel(logging.DEBUG)
-        logger = logging.getLogger()
-        logger.addHandler(handler)
+def enable_file_logging(log_file: Path) -> None:
+    handler = logging.handlers.RotatingFileHandler(
+        str(log_file),
+        mode="a",
+        # Keep at most 5 log files on disk
+        backupCount=4,
+        # Limit the size of each log file to 10MB
+        maxBytes=10 * 1000 * 1000,
+    )
+    handler.setFormatter(SectionFormatter())
+    handler.setLevel(logging.DEBUG)
+    logger = logging.getLogger()
+    logger.addHandler(handler)
 
 
 def cleanup() -> None:
@@ -365,3 +362,10 @@ def get_optional_input(prompt: str, default: str) -> str:
 def get_input(prompt: str, suffix: str = "") -> str:
     LOG.log(PROMPT, prompt + suffix)
     return input().strip()
+
+
+def truncate(message: str, size: int) -> str:
+    if len(message) <= size:
+        return message
+
+    return f"{message[:size]}..[truncated {len(message) - size} characters]"

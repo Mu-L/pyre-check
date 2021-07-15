@@ -18,7 +18,7 @@ type expect_fixpoint = {
 
 let assert_fixpoint ?models ~context source ~expect:{ iterations = expect_iterations; expect } =
   let scheduler = Test.mock_scheduler () in
-  let { all_callables; callgraph; environment; overrides } =
+  let { callables_to_analyze; callgraph; environment; overrides; _ } =
     initialize ?models ~handle:"qualifier.py" ~context source
   in
   let dependencies =
@@ -26,15 +26,14 @@ let assert_fixpoint ?models ~context source ~expect:{ iterations = expect_iterat
     |> DependencyGraph.union overrides
     |> DependencyGraph.reverse
   in
-  let analyses = [TaintAnalysis.abstract_kind] in
   let iterations =
     Analysis.compute_fixpoint
       ~scheduler
       ~environment
-      ~analyses
+      ~analysis:TaintAnalysis.abstract_kind
       ~dependencies
       ~filtered_callables:Callable.Set.empty
-      ~all_callables
+      ~all_callables:callables_to_analyze
       Fixpoint.Epoch.initial
   in
   assert_bool "Callgraph is empty!" (Callable.RealMap.length callgraph > 0);
@@ -334,7 +333,7 @@ let test_skipped_analysis context =
               ~kind:`Function
               ~sink_parameters:[{ name = "y"; sinks = [Sinks.NamedSink "Demo"] }]
               ~tito_parameters:["z"]
-              ~analysis_mode:Taint.Result.Mode.SkipAnalysis
+              ~analysis_modes:(Taint.Result.ModeSet.singleton SkipAnalysis)
               "qualifier.skipped_model";
           ];
         iterations = 1;
@@ -366,13 +365,8 @@ let test_sanitized_analysis context =
               ~sink_parameters:[{ name = "y"; sinks = [Sinks.NamedSink "Demo"] }]
               ~tito_parameters:["z"]
               ~errors:[{ code = 5001; pattern = ".*" }]
-              ~analysis_mode:
-                (Mode.Sanitize
-                   {
-                     Mode.sources = Some Mode.AllSources;
-                     sinks = Some Mode.AllSinks;
-                     tito = Some AllTito;
-                   })
+              ~sanitize:
+                { Sanitize.sources = Some AllSources; sinks = Some AllSinks; tito = Some AllTito }
               "qualifier.sanitized_model";
           ];
         iterations = 1;

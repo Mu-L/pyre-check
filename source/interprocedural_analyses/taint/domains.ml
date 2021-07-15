@@ -187,7 +187,7 @@ module FlowDetails = struct
 
     type 'a slot =
       | SimpleFeature : Features.SimpleSet.t slot
-      | ComplexFeature : Features.ComplexSet.t slot
+      | ReturnAccessPath : Features.ReturnAccessPathSet.t slot
       | TraceLength : TraceLength.t slot
       | TitoPosition : Features.TitoPositionSet.t slot
       | LeafName : Features.LeafNameSet.t slot
@@ -200,7 +200,7 @@ module FlowDetails = struct
     let slot_name (type a) (slot : a slot) =
       match slot with
       | SimpleFeature -> "SimpleFeature"
-      | ComplexFeature -> "ComplexFeature"
+      | ReturnAccessPath -> "ReturnAccessPath"
       | TraceLength -> "TraceLength"
       | TitoPosition -> "TitoPosition"
       | LeafName -> "LeafName"
@@ -211,7 +211,7 @@ module FlowDetails = struct
     let slot_domain (type a) (slot : a slot) =
       match slot with
       | SimpleFeature -> (module Features.SimpleSet : Abstract.Domain.S with type t = a)
-      | ComplexFeature -> (module Features.ComplexSet : Abstract.Domain.S with type t = a)
+      | ReturnAccessPath -> (module Features.ReturnAccessPathSet : Abstract.Domain.S with type t = a)
       | TraceLength -> (module TraceLength : Abstract.Domain.S with type t = a)
       | TitoPosition -> (module Features.TitoPositionSet : Abstract.Domain.S with type t = a)
       | LeafName -> (module Features.LeafNameSet : Abstract.Domain.S with type t = a)
@@ -233,19 +233,13 @@ module FlowDetails = struct
         Features.TitoPositionSet.bottom)
 
 
-  let leaf_name_set = Features.LeafNameSet.Set
+  let leaf_name_set = Features.LeafNameSet.Self
 
   let simple_feature = Features.SimpleSet.Element
 
   let simple_feature_element = Features.SimpleSet.ElementAndUnder
 
-  let simple_feature_set = Features.SimpleSet.SetAndUnder
-
   let simple_feature_self = Features.SimpleSet.Self
-
-  let complex_feature = Features.ComplexSet.Element
-
-  let complex_feature_set = Features.ComplexSet.Set
 
   let tito_position_element = Features.TitoPositionSet.Element
 
@@ -254,6 +248,17 @@ module FlowDetails = struct
   let pp formatter = Format.fprintf formatter "FlowDetails(%a)" product_pp
 
   let show = Format.asprintf "%a" pp
+
+  let subtract to_remove ~from =
+    (* Do not partially subtract slots, since this is unsound. *)
+    if to_remove == from then
+      bottom
+    else if is_bottom to_remove then
+      from
+    else if less_or_equal ~left:from ~right:to_remove then
+      bottom
+    else
+      from
 end
 
 module type TAINT_DOMAIN = sig
@@ -269,21 +274,14 @@ module type TAINT_DOMAIN = sig
 
   val flow_details : FlowDetails.t Abstract.Domain.part
 
-  val leaf_name_set : Features.LeafName.t list Abstract.Domain.part
+  val leaf_name_set : Features.LeafNameSet.t Abstract.Domain.part
 
   val simple_feature : Features.Simple.t Abstract.Domain.part
 
   val simple_feature_element
     : Features.Simple.t Abstract.OverUnderSetDomain.approximation Abstract.Domain.part
 
-  val simple_feature_set
-    : Features.Simple.t Abstract.OverUnderSetDomain.approximation list Abstract.Domain.part
-
   val simple_feature_self : Features.SimpleSet.t Abstract.Domain.part
-
-  val complex_feature : Features.Complex.t Abstract.Domain.part
-
-  val complex_feature_set : Features.Complex.t list Abstract.Domain.part
 
   val first_indices : Features.FirstIndexSet.t Abstract.Domain.part
 
@@ -292,6 +290,8 @@ module type TAINT_DOMAIN = sig
   val add_features : Features.SimpleSet.t -> t -> t
 
   val transform_on_widening_collapse : t -> t
+
+  val prune_maximum_length : TraceLength.t -> t -> t
 
   (* Add trace info at call-site *)
   val apply_call
@@ -371,15 +371,9 @@ end = struct
 
   let simple_feature = FlowDetails.simple_feature
 
-  let simple_feature_set = FlowDetails.simple_feature_set
-
   let simple_feature_self = FlowDetails.simple_feature_self
 
   let simple_feature_element = FlowDetails.simple_feature_element
-
-  let complex_feature = FlowDetails.complex_feature
-
-  let complex_feature_set = FlowDetails.complex_feature_set
 
   let first_fields = Features.FirstFieldSet.Self
 
@@ -405,11 +399,10 @@ end = struct
               let breadcrumb_json = Features.Breadcrumb.to_json breadcrumb ~on_all_paths:in_under in
               breadcrumb_json :: breadcrumbs
         in
-        let gather_return_access_path feature leaves =
-          match feature with
-          | Features.Complex.ReturnAccessPath path ->
-              let path_name = Abstract.TreeDomain.Label.show_path path in
-              `Assoc ["kind", leaf_kind_json; "name", `String path_name] :: leaves
+        let gather_return_access_path path leaves =
+          let path_name = Abstract.TreeDomain.Label.show_path path in
+          `Assoc ["kind", leaf_kind_json; "name", `String path_name; "depth", `Int trace_length]
+          :: leaves
         in
         let breadcrumbs =
           FlowDetails.(fold simple_feature_element ~f:gather_json ~init:[] features)
@@ -430,7 +423,12 @@ end = struct
           |> Features.FirstField.to_json
         in
         ( List.concat [first_index_breadcrumbs; first_field_breadcrumbs; breadcrumbs],
-          FlowDetails.(fold complex_feature ~f:gather_return_access_path ~init:leaves features) )
+          FlowDetails.(
+            fold
+              Features.ReturnAccessPathSet.Element
+              ~f:gather_return_access_path
+              ~init:leaves
+              features) )
       in
       let tito_positions =
         FlowDetails.get FlowDetails.Slots.TitoPosition features
@@ -490,6 +488,14 @@ end = struct
     add_features broadening
 
 
+  let prune_maximum_length maximum_length =
+    let filter_flow (_, flow_details) =
+      let length = FlowDetails.get FlowDetails.Slots.TraceLength flow_details in
+      TraceLength.is_bottom length || TraceLength.less_or_equal ~left:maximum_length ~right:length
+    in
+    transform LeafDomain.KeyValue Filter ~f:filter_flow
+
+
   let apply_call location ~callees ~port ~path ~element:taint =
     let apply (trace_info, leaf_taint) =
       let open TraceInfo in
@@ -512,23 +518,22 @@ end = struct
           trace_info, leaf_taint
       | Declaration { leaf_name_provided } ->
           let trace_info = Origin location in
-          let add_leaf_names info_set =
+          let new_leaf_names =
             if leaf_name_provided then
-              info_set
+              Features.LeafNameSet.bottom
             else
               let open Features in
-              let add_leaf_name info_set callee =
+              let make_leaf_name callee =
                 LeafName.
                   { leaf = Interprocedural.Callable.external_target_name callee; port = None }
-                :: info_set
               in
-              List.fold callees ~f:add_leaf_name ~init:info_set
+              List.map ~f:make_leaf_name callees |> Features.LeafNameSet.of_list
           in
           let leaf_taint =
             LeafDomain.transform
-              FlowDetails.leaf_name_set
-              Abstract.Domain.Map
-              ~f:add_leaf_names
+              Features.LeafNameSet.Self
+              Abstract.Domain.Add
+              ~f:new_leaf_names
               leaf_taint
           in
           trace_info, leaf_taint
@@ -542,7 +547,9 @@ module BackwardTaint = MakeTaint (Sinks)
 module MakeTaintTree (Taint : TAINT_DOMAIN) () = struct
   include Abstract.TreeDomain.Make
             (struct
-              let max_tree_depth_after_widening () = Configuration.maximum_tree_depth_after_widening
+              let max_tree_depth_after_widening () =
+                TaintConfiguration.maximum_tree_depth_after_widening
+
 
               let check_invariants = true
             end)
@@ -571,7 +578,7 @@ module MakeTaintTree (Taint : TAINT_DOMAIN) () = struct
 
   let is_empty = is_bottom
 
-  let compute_essential_features ~essential_complex_features tree =
+  let compute_essential_features ~essential_return_access_paths tree =
     let essential_trace_info = function
       | _ -> TraceInfo.Declaration { leaf_name_provided = false }
     in
@@ -579,7 +586,7 @@ module MakeTaintTree (Taint : TAINT_DOMAIN) () = struct
     let essential_tito_positions _ = Features.TitoPositionSet.bottom in
     let essential_leaf_names _ = Features.LeafNameSet.bottom in
     transform Taint.trace_info Map ~f:essential_trace_info tree
-    |> transform Features.ComplexSet.Self Map ~f:essential_complex_features
+    |> transform Features.ReturnAccessPathSet.Self Map ~f:essential_return_access_paths
     |> transform Features.SimpleSet.Self Map ~f:essential_simple_features
     |> transform Features.TitoPositionSet.Self Map ~f:essential_tito_positions
     |> transform Features.LeafNameSet.Self Map ~f:essential_leaf_names
@@ -587,23 +594,29 @@ module MakeTaintTree (Taint : TAINT_DOMAIN) () = struct
 
   (* Keep only non-essential structure. *)
   let essential tree =
-    let essential_complex_features _ = Features.ComplexSet.bottom in
-    compute_essential_features ~essential_complex_features tree
+    let essential_return_access_paths _ = Features.ReturnAccessPathSet.bottom in
+    compute_essential_features ~essential_return_access_paths tree
 
 
   let essential_for_constructor tree =
-    let essential_complex_features set = set in
-    compute_essential_features ~essential_complex_features tree
+    let essential_return_access_paths set = set in
+    compute_essential_features ~essential_return_access_paths tree
 
 
-  let approximate_complex_access_paths ~maximum_complex_access_path_length tree =
-    let cut_off features =
-      if List.length features > maximum_complex_access_path_length then
-        [Features.Complex.ReturnAccessPath []]
+  let approximate_return_access_paths ~maximum_return_access_path_length tree =
+    let cut_off paths =
+      if Features.ReturnAccessPathSet.count paths > maximum_return_access_path_length then
+        Features.ReturnAccessPathSet.elements paths
+        |> Features.ReturnAccessPath.common_prefix
+        |> Features.ReturnAccessPathSet.singleton
       else
-        features
+        paths
     in
-    transform Taint.complex_feature_set Map ~f:cut_off tree
+    transform Features.ReturnAccessPathSet.Self Map ~f:cut_off tree
+
+
+  let prune_maximum_length maximum_length =
+    transform Taint.Self Map ~f:(Taint.prune_maximum_length maximum_length)
 
 
   let filter_by_leaf ~leaf taint_tree =
@@ -721,6 +734,7 @@ let local_return_taint =
     [
       Part (BackwardTaint.trace_info, TraceInfo.Declaration { leaf_name_provided = false });
       Part (BackwardTaint.leaf, Sinks.LocalReturn);
-      Part (BackwardTaint.complex_feature, Features.Complex.ReturnAccessPath []);
+      Part (TraceLength.Self, 0);
+      Part (Features.ReturnAccessPathSet.Element, []);
       Part (Features.SimpleSet.Self, Features.SimpleSet.empty);
     ]

@@ -40,7 +40,8 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "class_flows.C.__class__.tainted_class_attribute"
+                "name":
+                  "Obj{class_flows.C.__class__.tainted_class_attribute}"
               }
             ]
           }
@@ -91,7 +92,8 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "class_flows.C.__class__.tainted_class_attribute"
+                "name":
+                  "Obj{class_flows.C.__class__.tainted_class_attribute}"
               }
             ]
           }
@@ -141,7 +143,8 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "class_flows.C.__class__.tainted_class_attribute"
+                "name":
+                  "Obj{class_flows.C.__class__.tainted_class_attribute}"
               }
             ]
           }
@@ -189,7 +192,10 @@
               "end": 23
             },
             "leaves": [
-              { "kind": "Test", "name": "class_flows.C.tainted_attribute" }
+              {
+                "kind": "Test",
+                "name": "Obj{class_flows.C.tainted_attribute}"
+              }
             ]
           }
         ]
@@ -236,7 +242,10 @@
               "end": 23
             },
             "leaves": [
-              { "kind": "Test", "name": "class_flows.C.tainted_attribute" }
+              {
+                "kind": "Test",
+                "name": "Obj{class_flows.C.tainted_attribute}"
+              }
             ]
           }
         ]
@@ -285,7 +294,8 @@
             "leaves": [
               {
                 "kind": "Test",
-                "name": "class_flows.C.__class__.tainted_class_attribute"
+                "name":
+                  "Obj{class_flows.C.__class__.tainted_class_attribute}"
               }
             ]
           }
@@ -412,7 +422,6 @@
   "data": {
     "callable":
       "class_flows.HasClassmethods._async_results_for_non_empty_query_from_db",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(locale)",
@@ -436,15 +445,37 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{class_flows.C.__class__.tainted_class_attribute}",
+    "sinks": [
+      {
+        "port": "formal($global)",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
+      }
+    ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "Obj{class_flows.C.tainted_attribute}",
+    "sinks": [
+      {
+        "port": "formal($global)",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
+      }
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "class_flows.HasClassmethods._get_multi_word_results",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(locale)",
@@ -461,15 +492,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "class_flows.HasDecoratedClassmethod.to_sink",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -486,7 +515,21 @@
           }
         ]
       }
+    ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "list.append",
+    "tito": [
+      {
+        "port": "formal(element)",
+        "taint": [
+          { "decl": null, "leaves": [ { "kind": "ParameterUpdate0" } ] }
+        ]
+      }
     ],
-    "tito": []
+    "modes": [ "Obscure" ]
   }
 }

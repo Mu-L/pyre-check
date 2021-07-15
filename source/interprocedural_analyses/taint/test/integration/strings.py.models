@@ -374,9 +374,35 @@
 {
   "kind": "model",
   "data": {
+    "callable": "str.__add__",
+    "tito": [
+      {
+        "port": "formal(other)",
+        "taint": [
+          {
+            "decl": null,
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
+            "features": [ { "always-via": "string_concat_rhs" } ]
+          }
+        ]
+      },
+      {
+        "port": "formal(self)",
+        "taint": [
+          {
+            "decl": null,
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
+            "features": [ { "always-via": "string_concat_lhs" } ]
+          }
+        ]
+      }
+    ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
     "callable": "strings.concatenate_lhs",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(source)",
@@ -384,7 +410,7 @@
           {
             "decl": null,
             "tito": [ { "line": 10, "start": 11, "end": 17 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [
               { "always-via": "tito" },
               { "always-via": "string_concat_lhs" }
@@ -399,8 +425,6 @@
   "kind": "model",
   "data": {
     "callable": "strings.concatenate_rhs",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(source)",
@@ -408,7 +432,7 @@
           {
             "decl": null,
             "tito": [ { "line": 14, "start": 17, "end": 23 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [
               { "always-via": "tito" },
               { "always-via": "string_concat_rhs" }
@@ -423,7 +447,6 @@
   "kind": "model",
   "data": {
     "callable": "strings.format_sink",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -445,8 +468,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -474,17 +496,13 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "strings.format_tito",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(x)",
@@ -492,7 +510,7 @@
           {
             "decl": null,
             "tito": [ { "line": 59, "start": 25, "end": 26 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [
               { "always-via": "obscure" },
               { "always-via": "format-string" }

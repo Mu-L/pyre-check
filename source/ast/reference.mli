@@ -9,6 +9,8 @@ open Core
 
 type t [@@deriving compare, eq, sexp, show, hash, to_yojson]
 
+val local_qualifier_pattern : Str.regexp
+
 val create : ?prefix:t -> string -> t
 
 module Map : Map.S with type Key.t = t
@@ -62,3 +64,5 @@ val prefix : t -> t option
 val head : t -> t option
 
 val last : t -> Identifier.t
+
+val map_last : f:(Identifier.t -> Identifier.t) -> t -> t

@@ -179,6 +179,20 @@
 {
   "kind": "model",
   "data": {
+    "callable": "Obj{django.http.Request.GET}",
+    "sources": [
+      {
+        "port": "result",
+        "taint": [
+          { "decl": null, "leaves": [ { "kind": "UserControlled" } ] }
+        ]
+      }
+    ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
     "callable": "Ovr{object::__repr__}",
     "sources": [
       {
@@ -204,9 +218,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -237,9 +249,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -270,9 +280,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -303,9 +311,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -336,9 +342,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -369,8 +373,6 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }

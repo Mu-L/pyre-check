@@ -40,7 +40,7 @@
               "start": 4,
               "end": 5
             },
-            "leaves": [ { "kind": "Test", "name": "global_flows.l" } ]
+            "leaves": [ { "kind": "Test", "name": "Obj{global_flows.l}" } ]
           }
         ]
       }
@@ -93,7 +93,7 @@
               "port": "formal(arg)",
               "length": 1
             },
-            "leaves": [ { "kind": "Test", "name": "global_flows.l" } ],
+            "leaves": [ { "kind": "Test", "name": "Obj{global_flows.l}" } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -146,7 +146,7 @@
               "start": 16,
               "end": 17
             },
-            "leaves": [ { "kind": "Test", "name": "global_flows.x" } ]
+            "leaves": [ { "kind": "Test", "name": "Obj{global_flows.x}" } ]
           }
         ]
       }
@@ -198,7 +198,7 @@
               "start": 33,
               "end": 34
             },
-            "leaves": [ { "kind": "Test", "name": "global_flows.x" } ]
+            "leaves": [ { "kind": "Test", "name": "Obj{global_flows.x}" } ]
           }
         ]
       }
@@ -251,7 +251,7 @@
               "port": "formal(arg)",
               "length": 1
             },
-            "leaves": [ { "kind": "Test", "name": "global_flows.x" } ],
+            "leaves": [ { "kind": "Test", "name": "Obj{global_flows.x}" } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -305,7 +305,7 @@
               "port": "formal(arg)",
               "length": 1
             },
-            "leaves": [ { "kind": "Test", "name": "global_flows.x" } ],
+            "leaves": [ { "kind": "Test", "name": "Obj{global_flows.x}" } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -320,15 +320,11 @@
 {
   "kind": "model",
   "data": {
-    "callable": "global_flows.MyList.append",
-    "sources": [],
-    "sinks": [],
-    "tito": [
+    "callable": "Obj{global_flows.l}",
+    "sinks": [
       {
-        "port": "formal(item)",
-        "taint": [
-          { "decl": null, "leaves": [ { "kind": "ParameterUpdate0" } ] }
-        ]
+        "port": "formal($global)",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
       }
     ]
   }
@@ -336,8 +332,34 @@
 {
   "kind": "model",
   "data": {
+    "callable": "Obj{global_flows.x}",
+    "sinks": [
+      {
+        "port": "formal($global)",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
+      }
+    ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "global_flows.MyList.append",
+    "tito": [
+      {
+        "port": "formal(item)",
+        "taint": [
+          { "decl": null, "leaves": [ { "kind": "ParameterUpdate0" } ] }
+        ]
+      }
+    ],
+    "modes": [ "Obscure" ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
     "callable": "global_flows.append_argument",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -350,20 +372,18 @@
               "end": 5
             },
             "tito": [ { "line": 69, "start": 13, "end": 16 } ],
-            "leaves": [ { "kind": "Test", "name": "global_flows.l" } ],
+            "leaves": [ { "kind": "Test", "name": "Obj{global_flows.l}" } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "global_flows.indirectly_update_x_arg1",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -376,20 +396,18 @@
               "end": 17
             },
             "tito": [ { "line": 37, "start": 19, "end": 22 } ],
-            "leaves": [ { "kind": "Test", "name": "global_flows.x" } ],
+            "leaves": [ { "kind": "Test", "name": "Obj{global_flows.x}" } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "global_flows.indirectly_update_x_arg2",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -402,21 +420,18 @@
               "end": 22
             },
             "tito": [ { "line": 49, "start": 16, "end": 19 } ],
-            "leaves": [ { "kind": "Test", "name": "global_flows.x" } ],
+            "leaves": [ { "kind": "Test", "name": "Obj{global_flows.x}" } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "global_flows.update_arg1",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg2)",
@@ -424,15 +439,14 @@
           { "decl": null, "leaves": [ { "kind": "ParameterUpdate0" } ] }
         ]
       }
-    ]
+    ],
+    "modes": [ "Obscure" ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "global_flows.update_arg2",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg1)",
@@ -440,6 +454,7 @@
           { "decl": null, "leaves": [ { "kind": "ParameterUpdate1" } ] }
         ]
       }
-    ]
+    ],
+    "modes": [ "Obscure" ]
   }
 }

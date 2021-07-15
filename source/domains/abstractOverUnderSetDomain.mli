@@ -13,9 +13,7 @@ type 'a approximation = {
 module type S = sig
   include AbstractSetDomain.S
 
-  type _ AbstractDomainCore.part +=
-    | ElementAndUnder : element approximation AbstractDomainCore.part
-    | SetAndUnder : element approximation list AbstractDomainCore.part
+  type _ AbstractDomainCore.part += ElementAndUnder : element approximation AbstractDomainCore.part
 
   (* Distinct from bottom in that it has no elements present, which will cause joins to
      over-approximate *)

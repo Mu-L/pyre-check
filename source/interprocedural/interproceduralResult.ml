@@ -31,19 +31,6 @@ module type ANALYSIS_PROVIDED = sig
 
   val reached_fixpoint : iteration:int -> previous:call_model -> next:call_model -> bool
 
-  val get_errors : result -> InterproceduralError.t list
-
-  val externalize
-    :  filename_lookup:(Reference.t -> string option) ->
-    Callable.t ->
-    result option ->
-    call_model ->
-    Yojson.Safe.json list
-
-  val metadata : unit -> Yojson.Safe.json
-
-  val statistics : unit -> Yojson.Safe.json
-
   (* remove aspects from the model that are not needed at call sites. Just for optimization. *)
   val strip_for_callsite : call_model -> call_model
 end
@@ -85,10 +72,28 @@ type 'part pkg =
     }
       -> 'part pkg
 
-type 'call_model initialize_result = {
-  initial_models: 'call_model Callable.Map.t;
-  skip_overrides: Ast.Reference.Set.t;
-}
+module InitializedModels = struct
+  type 'call_model initialize_result = {
+    initial_models: 'call_model Callable.Map.t;
+    skip_overrides: Ast.Reference.Set.t;
+  }
+
+  type 'call_model t =
+    updated_environment:Analysis.TypeEnvironment.ReadOnly.t option -> 'call_model initialize_result
+
+  let create f = f
+
+  let empty =
+    create (fun ~updated_environment:_ ->
+        { initial_models = Callable.Map.empty; skip_overrides = Ast.Reference.Set.empty })
+
+
+  let get_models f = f ~updated_environment:None
+
+  (* Generate models from the initial models and an updated environment.
+   * For the taint analysis, this runs model queries. *)
+  let get_models_including_generated_models ~updated_environment f = f ~updated_environment
+end
 
 module type ANALYZER = sig
   type result
@@ -96,21 +101,37 @@ module type ANALYZER = sig
   type call_model
 
   val analyze
-    :  callable:Callable.real_target ->
-    environment:Analysis.TypeEnvironment.ReadOnly.t ->
+    :  environment:Analysis.TypeEnvironment.ReadOnly.t ->
+    callable:Callable.real_target ->
     qualifier:Reference.t ->
     define:Define.t Node.t ->
     existing:call_model option ->
     result * call_model
 
+  (* Called prior to typechecking, so we can fail fast on bad config *)
+  val initialize_configuration
+    :  static_analysis_configuration:Configuration.StaticAnalysis.t ->
+    unit
+
   (* Called once on master before analysis of individual callables. *)
-  val init
-    :  configuration:Configuration.StaticAnalysis.t ->
-    scheduler:Scheduler.t ->
+  val initialize_models
+    :  scheduler:Scheduler.t ->
+    static_analysis_configuration:Configuration.StaticAnalysis.t ->
     environment:Analysis.TypeEnvironment.ReadOnly.t ->
     functions:Callable.t list ->
     stubs:Callable.t list ->
-    call_model initialize_result
+    call_model InitializedModels.t
+
+  val report
+    :  scheduler:Scheduler.t ->
+    static_analysis_configuration:Configuration.StaticAnalysis.t ->
+    environment:Analysis.TypeEnvironment.ReadOnly.t ->
+    filename_lookup:(Ast.Reference.t -> string option) ->
+    callables:Callable.Set.t ->
+    skipped_overrides:Ast.Reference.t list ->
+    fixpoint_timer:Timer.t ->
+    fixpoint_iterations:int option ->
+    Yojson.Safe.json list
 end
 
 module type ANALYSIS_RESULT = sig

@@ -11,7 +11,6 @@ open Analysis
 open Interprocedural
 
 type t = {
-  is_obscure: bool;
   call_target: Callable.t;
   model: TaintResult.call_model;
 }
@@ -25,24 +24,37 @@ val get_callsite_model
   arguments:Expression.Call.Argument.t list ->
   t
 
-val get_global_sink_model
+module GlobalModel : sig
+  type t
+
+  val get_source : t -> Domains.ForwardState.Tree.t
+
+  val get_sink : t -> Domains.BackwardState.Tree.t
+
+  val get_tito : t -> Domains.BackwardState.Tree.t
+
+  val get_sanitize : t -> TaintResult.Sanitize.t
+
+  val get_modes : t -> TaintResult.ModeSet.t
+
+  val is_sanitized : t -> bool
+end
+
+val get_global_model
   :  resolution:Resolution.t ->
   location:Location.WithModule.t ->
   expression:Expression.t ->
-  Domains.BackwardState.Tree.t option
-
-val get_global_tito_model_and_mode
-  :  resolution:Resolution.t ->
-  expression:Expression.t ->
-  Domains.BackwardState.Tree.t option * TaintResult.Mode.t option
-
-val global_is_sanitized : resolution:Resolution.t -> expression:Expression.t -> bool
+  GlobalModel.t
 
 val get_model_sources : paths:Path.t list -> (Path.t * string) list
 
 val infer_class_models
   :  environment:TypeEnvironment.ReadOnly.t ->
   TaintResult.call_model Callable.Map.t
+
+val is_obscure : TaintResult.call_model -> bool
+
+val remove_obscureness : TaintResult.call_model -> TaintResult.call_model
 
 val remove_sinks : TaintResult.call_model -> TaintResult.call_model
 

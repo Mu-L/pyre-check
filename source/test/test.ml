@@ -14,8 +14,8 @@ open PyreParser
 open Statement
 
 let initialize () =
-  Memory.initialize_for_tests ();
   Log.GlobalState.initialize_for_tests ();
+  Memory.initialize_for_tests ();
   Statistics.disable ()
 
 
@@ -469,6 +469,8 @@ let typeshed_stubs ?(include_helper_builtins = true) () =
           SupportsComplex, SupportsRound, IO, BinaryIO, Union, final,
           ItemsView, KeysView, ValuesView, ByteString, Optional, AnyStr, Type, Text,
         )
+        from pyre_extensions import Add, Multiply, Divide
+        from typing_extensions import Literal
 
         _T = TypeVar('_T')
         _T_co = TypeVar('_T_co', covariant=True)
@@ -570,6 +572,8 @@ let typeshed_stubs ?(include_helper_builtins = true) () =
           def __gt__(self, x: float) -> bool: ...
           def __ge__(self, x: float) -> bool: ...
 
+        N1 = TypeVar("N1", bound=int)
+        N2 = TypeVar("N2", bound=int)
 
         class int:
           @overload
@@ -585,10 +589,10 @@ let typeshed_stubs ?(include_helper_builtins = true) () =
           @property
           def denominator(self) -> int: ...
           def conjugate(self) -> int: ...
-          def __add__(self, x: int) -> int: ...
-          def __sub__(self, x: int) -> int: ...
-          def __mul__(self, x: int) -> int: ...
-          def __floordiv__(self, x: int) -> int: ...
+          def __add__(self: N1, x: N2) -> Add[N1, N2]: ...
+          def __sub__(self: N1, x: N2) -> Add[N1, Multiply[Literal[-1], N2]]: ...
+          def __mul__(self: N1, x: N2) -> Multiply[N1, N2]: ...
+          def __floordiv__(self: N1, x: N2) -> Divide[N1, N2]: ...
           if sys.version_info < (3,):
               def __div__(self, x: int) -> int: ...
           def __truediv__(self, x: int) -> float: ...
@@ -983,6 +987,7 @@ let typeshed_stubs ?(include_helper_builtins = true) () =
         ClassVar: _SpecialForm = ...
         # TODO(T76821797): This is wrong. But it's what typeshed says
         NoReturn = Union[None]
+        TypeGuard: _SpecialForm = ...
 
         if sys.version_info < (3, 7):
             class GenericMeta(type): ...
@@ -1187,7 +1192,8 @@ let typeshed_stubs ?(include_helper_builtins = true) () =
     );
     ( "functools.pyi",
       {|
-        from typing import TypeVar, Generic, Callable, Tuple, Any, Dict, Optional
+        from typing import TypeVar, Generic, Callable, Tuple, Any, Dict, Optional, Sequence
+        _AnyCallable = Callable[..., Any]
         _T = TypeVar("_T")
         _S = TypeVar("_S")
 
@@ -1218,6 +1224,11 @@ let typeshed_stubs ?(include_helper_builtins = true) () =
         ) -> Callable[[Callable[..., _T]], _lru_cache_wrapper[_T]]:
             ...
 
+        def wraps(
+          wrapped: _AnyCallable,
+          assigned: Sequence[str] = ...,
+          updated: Sequence[str] = ...
+        ) -> Callable[[_T], _T]: ...
        |}
     );
     ( "subprocess.pyi",
@@ -1274,13 +1285,10 @@ let typeshed_stubs ?(include_helper_builtins = true) () =
         |};
     ( "typing_extensions.pyi",
       {|
-        from typing import Final as Final, ParamSpec as ParamSpec
-        class _SpecialForm:
-            def __getitem__(self, typeargs: Any) -> Any: ...
+        from typing import Final as Final, ParamSpec as ParamSpec, _SpecialForm
         Literal: _SpecialForm = ...
-        class TypeAlias:
-          def __init__(self, target_type: type) -> None: ...
-          def __getitem__(self, typeargs: Any) -> Any: ...
+
+        TypeAlias: _SpecialForm = ...
         |}
     );
     ( "collections.pyi",
@@ -1426,6 +1434,9 @@ let typeshed_stubs ?(include_helper_builtins = true) () =
         _T = TypeVar("_T")
         _A = TypeVar("_A", bound=int)
         _B = TypeVar("_B", bound=int)
+        _T1 = TypeVar("_T1")
+        _T2 = TypeVar("_T2")
+
 
         def none_throws(optional: Optional[_T]) -> _T: ...
         def safe_cast(new_type: Type[_T], value: Any) -> _T: ...
@@ -1450,6 +1461,8 @@ let typeshed_stubs ?(include_helper_builtins = true) () =
             ) -> None: ...
 
         class Unpack(Generic[_T]): ...
+        class Broadcast(Generic[_T1, _T2]): ...
+        class BroadcastError(Generic[_T1, _T2]): ...
         |}
     );
     ( "pyre_extensions/type_variable_operators.pyi",
@@ -2671,6 +2684,7 @@ module ScratchProject = struct
       ?(show_error_traces = false)
       ?(include_typeshed_stubs = true)
       ?(include_helper_builtins = true)
+      ?(infer = false)
       sources
     =
     let add_source ~root (relative, content) =
@@ -2696,6 +2710,7 @@ module ScratchProject = struct
         ~features:{ Configuration.Features.default with go_to_definition = true }
         ~show_error_traces
         ~parallel:false
+        ~infer
         ()
     in
     let external_sources =

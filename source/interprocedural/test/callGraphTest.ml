@@ -427,6 +427,27 @@ let test_call_graph_of_define context =
                }) );
       ];
   assert_call_graph_of_define
+    ~source:
+      {|
+        class C:
+          @classmethod
+          def f(cls, a: int) -> int: ...
+        def foo():
+          C.f()
+      |}
+    ~define_name:"test.foo"
+    ~expected:
+      [
+        ( "6:2-6:7",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 collapse_tito = true;
+                 implicit_self = true;
+                 targets = [`Method { Callable.class_name = "test.C"; method_name = "f" }];
+               }) );
+      ];
+  assert_call_graph_of_define
     ~source:{|
         def foo():
           1 > 2
@@ -504,6 +525,34 @@ let test_call_graph_of_define context =
                  collapse_tito = true;
                  implicit_self = false;
                  targets = [`Function "test.callable_target"];
+               }) );
+      ];
+  assert_call_graph_of_define
+    ~source:
+      {|
+      from builtins import to_callable_target
+
+      class Foo:
+        @to_callable_target
+        def callable_target(arg):
+          pass
+
+      def bar(foo: Foo):
+        foo.callable_target(1)
+      |}
+    ~define_name:"test.bar"
+    ~expected:
+      [
+        ( "10:2-10:24",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 collapse_tito = true;
+                 implicit_self = true;
+                 targets =
+                   [
+                     `Method { Callable.class_name = "TestCallableTarget"; method_name = "__call__" };
+                   ];
                }) );
       ];
   assert_call_graph_of_define
@@ -1052,6 +1101,306 @@ let test_call_graph_of_define context =
                  CallGraph.implicit_self = false;
                  collapse_tito = true;
                  targets = [`Function "$local_test?Foo?outer$inner"];
+               }) );
+      ];
+  ();
+  (* Well-typed decorators are 'safely' ignored (when not inlined). *)
+  assert_call_graph_of_define
+    ~source:
+      {|
+      from typing import Callable, TypeVar
+      from pyre_extensions import ParameterSpecification
+
+      _T = TypeVar("_T")
+      _TParams = ParameterSpecification("_TParams")
+
+      class Timer:
+        def __call__(self, func: Callable[_TParams, _T]) -> Callable[_TParams, _T]:
+          return func
+
+      def timer(name: str) -> Timer:
+        return Timer()
+
+      @timer("bar")
+      def foo(x: int) -> None:
+        pass
+
+      def caller() -> None:
+        foo(1)
+    |}
+    ~define_name:"test.caller"
+    ~expected:
+      [
+        ( "20:2-20:8",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 CallGraph.implicit_self = false;
+                 collapse_tito = true;
+                 targets = [`Function "test.foo"];
+               }) );
+      ];
+  assert_call_graph_of_define
+    ~source:
+      {|
+      from typing import Callable, TypeVar
+      from pyre_extensions import ParameterSpecification
+
+      _T = TypeVar("_T")
+      _TParams = ParameterSpecification("_TParams")
+
+      class Timer:
+        def __call__(self, func: Callable[_TParams, _T]) -> Callable[_TParams, _T]:
+          return func
+
+      def timer(name: str) -> Timer:
+        return Timer()
+
+      class Foo:
+        @timer("bar")
+        def bar(self, x: int) -> None:
+          pass
+
+      def caller(foo: Foo) -> None:
+        foo.bar(1)
+    |}
+    ~define_name:"test.caller"
+    ~expected:
+      [
+        ( "21:2-21:12",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 CallGraph.implicit_self = true;
+                 collapse_tito = true;
+                 targets = [`Method { Callable.class_name = "test.Foo"; method_name = "bar" }];
+               }) );
+      ];
+  (* Partially-typed decorators are 'safely' ignored (when not inlined). *)
+  assert_call_graph_of_define
+    ~source:
+      {|
+      from typing import Callable, TypeVar
+      _T = TypeVar("_T")
+
+      class Timer:
+        def __call__(self, func: Callable[..., _T]) -> Callable[..., _T]:
+          return func
+
+      def timer(name: str) -> Timer:
+        return Timer()
+
+      @timer("bar")
+      def foo(x: int) -> None:
+        pass
+
+      def caller() -> None:
+        foo(1)
+    |}
+    ~define_name:"test.caller"
+    ~expected:
+      [
+        ( "17:2-17:8",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 CallGraph.implicit_self = false;
+                 collapse_tito = true;
+                 targets = [`Function "test.foo"];
+               }) );
+      ];
+  assert_call_graph_of_define
+    ~source:
+      {|
+      from typing import Callable, TypeVar
+      _T = TypeVar("_T")
+
+      class Timer:
+        def __call__(self, func: Callable[..., _T]) -> Callable[..., _T]:
+          return func
+
+      def timer(name: str) -> Timer:
+        return Timer()
+
+      class Foo:
+        @timer("bar")
+        def bar(self, x: int) -> None:
+          pass
+
+      def caller(foo: Foo) -> None:
+        foo.bar(1)
+    |}
+    ~define_name:"test.caller"
+    ~expected:
+      [
+        ( "18:2-18:12",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 CallGraph.implicit_self = true;
+                 collapse_tito = true;
+                 targets = [`Method { Callable.class_name = "test.Foo"; method_name = "bar" }];
+               }) );
+      ];
+  (* Untyped decorators are 'safely' ignored (when not inlined). *)
+  assert_call_graph_of_define
+    ~source:
+      {|
+      def timer(name: str):
+        pass
+
+      @timer("bar")
+      def foo(x: int) -> None:
+        pass
+
+      def caller() -> None:
+        foo(1)
+    |}
+    ~define_name:"test.caller"
+    ~expected:
+      [
+        ( "10:2-10:8",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 CallGraph.implicit_self = false;
+                 collapse_tito = true;
+                 targets = [`Function "test.foo"];
+               }) );
+      ];
+  assert_call_graph_of_define
+    ~source:
+      {|
+      def timer(name: str):
+        pass
+
+      class Foo:
+        @timer("bar")
+        def bar(self, x: int) -> None:
+          pass
+
+      def caller(foo: Foo) -> None:
+        foo.bar(1)
+    |}
+    ~define_name:"test.caller"
+    ~expected:
+      [
+        ( "11:2-11:12",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 CallGraph.implicit_self = true;
+                 collapse_tito = true;
+                 targets = [`Method { Callable.class_name = "test.Foo"; method_name = "bar" }];
+               }) );
+      ];
+  (* Well-typed decorators with @classmethod or @staticmethod. *)
+  assert_call_graph_of_define
+    ~source:
+      {|
+      from typing import Callable, TypeVar
+      from pyre_extensions import ParameterSpecification
+
+      _T = TypeVar("_T")
+      _TParams = ParameterSpecification("_TParams")
+
+      class Timer:
+        def __call__(self, func: Callable[_TParams, _T]) -> Callable[_TParams, _T]:
+          return func
+
+      def timer(name: str) -> Timer:
+        return Timer()
+
+      class Foo:
+        @classmethod
+        @timer("bar")
+        def bar(cls, x: int) -> None:
+          pass
+
+      def caller() -> None:
+        Foo.bar(1)
+    |}
+    ~define_name:"test.caller"
+    ~expected:
+      [
+        ( "22:2-22:12",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 CallGraph.implicit_self = true;
+                 collapse_tito = true;
+                 targets = [`Method { Callable.class_name = "test.Foo"; method_name = "bar" }];
+               }) );
+      ];
+  assert_call_graph_of_define
+    ~source:
+      {|
+      from typing import Callable, TypeVar
+      from pyre_extensions import ParameterSpecification
+
+      _T = TypeVar("_T")
+      _TParams = ParameterSpecification("_TParams")
+
+      class Timer:
+        def __call__(self, func: Callable[_TParams, _T]) -> Callable[_TParams, _T]:
+          return func
+
+      def timer(name: str) -> Timer:
+        return Timer()
+
+      class Foo:
+        @staticmethod
+        @timer("bar")
+        def bar(x: int) -> None:
+          pass
+
+      def caller() -> None:
+        Foo.bar(1)
+    |}
+    ~define_name:"test.caller"
+    ~expected:
+      [
+        ( "22:2-22:12",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 CallGraph.implicit_self = false;
+                 collapse_tito = true;
+                 targets = [`Method { Callable.class_name = "test.Foo"; method_name = "bar" }];
+               }) );
+      ];
+  (* Decorators with type errors. *)
+  assert_call_graph_of_define
+    ~source:
+      {|
+      from typing import Callable, TypeVar
+      _T = TypeVar("_T")
+      _TParams = ParameterSpecification("_TParams")
+
+      class Timer:
+        def __call__(self, func: Callable[_TParams, _T]) -> Callable[_TParams, _T]:
+          return func
+
+      def timer(name: str) -> Timer:
+        return Timer()
+
+      @timer(1) # Intended type error here.
+      def foo(x: int) -> None:
+        pass
+
+      def caller() -> None:
+        foo(1)
+    |}
+    ~define_name:"test.caller"
+    ~expected:
+      [
+        ( "18:2-18:8",
+          CallGraph.Callees
+            (CallGraph.RegularTargets
+               {
+                 CallGraph.implicit_self = false;
+                 collapse_tito = true;
+                 targets = [`Function "test.foo"];
                }) );
       ];
   ()

@@ -671,15 +671,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{lineage_analysis.DataFrame::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -690,15 +688,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{lineage_analysis.Series::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -709,15 +705,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{object::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -728,15 +722,13 @@
   "kind": "model",
   "data": {
     "callable": "lineage_analysis.DataFrame.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -747,15 +739,13 @@
   "kind": "model",
   "data": {
     "callable": "lineage_analysis.Series.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -766,7 +756,6 @@
   "kind": "model",
   "data": {
     "callable": "lineage_analysis.sink",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)[a]",
@@ -780,8 +769,7 @@
           { "decl": null, "leaves": [ { "kind": "SinkA[KindB]" } ] }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -801,8 +789,6 @@
           { "decl": null, "leaves": [ { "kind": "SourceA[KindB]" } ] }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }

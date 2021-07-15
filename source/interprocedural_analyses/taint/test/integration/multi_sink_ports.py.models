@@ -155,7 +155,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{multi_sink_ports.Query::send}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[_params]",
@@ -226,7 +225,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 2 } ],
             "features": [ { "always-via": "tito" }, { "via": "split" } ]
           }
         ]
@@ -238,7 +237,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{multi_sink_ports.QueryBase::send}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[_params]",
@@ -309,7 +307,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 2 } ],
             "features": [ { "always-via": "tito" }, { "via": "split" } ]
           }
         ]
@@ -321,15 +319,15 @@
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.Query.params",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(data)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[_params]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[_params]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -338,7 +336,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -349,7 +347,6 @@
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.Query.send",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[_params]",
@@ -421,7 +418,7 @@
           {
             "decl": null,
             "tito": [ { "line": 58, "start": 28, "end": 32 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 2 } ],
             "features": [ { "always-via": "tito" }, { "via": "split" } ]
           }
         ]
@@ -433,7 +430,6 @@
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.log_call",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(response)",
@@ -493,15 +489,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.sinkA",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -518,15 +512,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.sinkB",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -543,15 +535,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.sinkC",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -568,15 +558,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.sinkD",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -588,8 +576,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -607,16 +594,13 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.split",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)[_params]",
@@ -690,7 +674,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "split" } ]
           }
         ]
@@ -702,7 +686,6 @@
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.splitwrapper",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)[_params]",
@@ -774,7 +757,7 @@
           {
             "decl": null,
             "tito": [ { "line": 46, "start": 17, "end": 18 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" }, { "via": "split" } ]
           }
         ]
@@ -786,7 +769,6 @@
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.wrapper",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -889,15 +871,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "multi_sink_ports.wrapper2",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(x)",
@@ -1044,7 +1024,6 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }

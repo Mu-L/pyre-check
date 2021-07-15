@@ -9,8 +9,11 @@ werkzeug.wrappers.BaseRequest.base_url: TaintSource[UserControlled, UserControll
 def werkzeug.wrappers.BaseRequest.cookies(self) -> TaintSource[UserControlled, UserControlled_Meta, Cookies]: ...
 werkzeug.wrappers.BaseRequest.method: TaintSource[UserControlled, UserControlled_Meta] = ...
 werkzeug.wrappers.BaseRequest.headers: TaintSource[UserControlled, UserControlled_Meta, HeaderData] = ...
+@property
 def werkzeug.wrappers.CommonRequestDescriptorsMixin.content_type(self) -> TaintSource[UserControlled, UserControlled_Meta]: ...
+@property
 def werkzeug.wrappers.CommonRequestDescriptorsMixin.referrer(self) -> TaintSource[UserControlled, UserControlled_Meta, HeaderData]: ...
+@property
 def werkzeug.wrappers.UserAgentMixin.user_agent(self) -> TaintSource[UserControlled, UserControlled_Meta]: ...
 def werkzeug.datastructures.Headers.get(self, key, type) -> TaintSource[UserControlled, UserControlled_Meta, HeaderData]: ...
 
@@ -75,7 +78,7 @@ def flask.templating.render_template_string(
 ModelQuery(
   find = "functions",
   where = [
-    any_decorator.name.matches("app.route"),
+    Decorator(name.matches("app.route")),
   ],
   model = [
     AllParameters(TaintSource[UserControlled, UserControlled_Parameter]),
@@ -86,7 +89,7 @@ ModelQuery(
 ModelQuery(
   find = "functions",
   where = [
-    any_decorator.name.matches("app.errorhandler"),
+    Decorator(name.matches("app.errorhandler")),
   ],
   model = [
     Returns(TaintSink[ReturnedToUser])

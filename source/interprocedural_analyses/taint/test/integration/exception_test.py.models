@@ -2,6 +2,32 @@
 {
   "kind": "model",
   "data": {
+    "callable": "BaseException.__repr__",
+    "sources": [
+      {
+        "port": "result",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
+      }
+    ],
+    "modes": [ "Obscure" ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "BaseException.__str__",
+    "sources": [
+      {
+        "port": "result",
+        "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
+      }
+    ],
+    "modes": [ "Obscure" ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
     "callable": "exception_test.test_caught_exception",
     "sources": [
       {
@@ -18,9 +44,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -42,9 +66,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -67,7 +89,18 @@
         ]
       }
     ],
-    "sinks": [],
-    "tito": []
+    "tito": [
+      {
+        "port": "formal(ex)",
+        "taint": [
+          {
+            "decl": null,
+            "tito": [ { "line": 8, "start": 15, "end": 17 } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
+            "features": [ { "always-via": "obscure" } ]
+          }
+        ]
+      }
+    ]
   }
 }

@@ -25,7 +25,6 @@ DEVELOPMENT_COMPILER: str = COMPILER_VERSION
 RELEASE_COMPILER = f"{COMPILER_VERSION}+flambda"
 DEPENDENCIES = [
     "base64.3.5.0",
-    "conf-sqlite3",
     "core.v0.14.1",
     "re2.v0.14.0",
     "dune.2.8.2",
@@ -162,10 +161,6 @@ class Setup(NamedTuple):
         opam_environment_variables = self.opam_environment_variables()
 
         self.run(
-            ["opam", "update"],
-            add_environment_variables=opam_environment_variables,
-        )
-        self.run(
             ["opam", "install", "--yes"] + DEPENDENCIES,
             add_environment_variables=opam_environment_variables,
         )
@@ -263,6 +258,7 @@ def setup(runner_type: Type[Setup]) -> None:
     parser.add_argument("--development", action="store_true")
     parser.add_argument("--release", action="store_true")
     parser.add_argument("--build-type", type=BuildType)
+    parser.add_argument("--no-tests", action="store_true")
 
     parsed = parser.parse_args()
 
@@ -295,7 +291,9 @@ def setup(runner_type: Type[Setup]) -> None:
         LOG.info("Environment built successfully, stopping here as requested.")
     else:
         runner.full_setup(
-            pyre_directory, run_tests=True, build_type_override=parsed.build_type
+            pyre_directory,
+            run_tests=not parsed.no_tests,
+            build_type_override=parsed.build_type,
         )
 
 

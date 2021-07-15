@@ -314,6 +314,25 @@ let test_expand_format_string _ =
          };
     ];
 
+  assert_format_string
+    "f'{x for x in []}'"
+    "{x for x in []}"
+    [
+      +Expression.Generator
+         {
+           Comprehension.element = +Expression.Name (Name.Identifier "x");
+           generators =
+             [
+               {
+                 Comprehension.Generator.target = +Expression.Name (Name.Identifier "x");
+                 iterator = +Expression.List [];
+                 conditions = [];
+                 async = false;
+               };
+             ];
+         };
+    ];
+
   (* Ensure we fix up locations. *)
   let assert_locations source statements =
     let parsed_source = parse source |> Preprocessing.expand_format_string in
@@ -434,6 +453,7 @@ let test_qualify _ =
   assert_qualify "from a import b as c; c" "from a import b as c; a.b";
   assert_qualify "from builtins import b; b" "from builtins import b; b";
   assert_qualify "b; import a as b; b" "b; import a as b; a";
+  assert_qualify "import builtins; builtins.b" "import builtins; b";
 
   (* Qualification in different places. *)
   let assert_qualify_statement actual expected =
@@ -470,6 +490,15 @@ let test_qualify _ =
   assert_qualify_statement
     "b = 1\nfor b in []: pass"
     "$local_qualifier$b = 1\nfor $local_qualifier$b in []: pass";
+  assert_qualify_statement
+    "b = 1\n[b for b in []]"
+    "$local_qualifier$b = 1\n[$target$b for $target$b in []]";
+  assert_qualify_statement
+    "b = 1\n[b for a in []]"
+    "$local_qualifier$b = 1\n[$local_qualifier$b for $target$a in []]";
+  assert_qualify_statement
+    "b = 1\n[b for b in []]"
+    "$local_qualifier$b = 1\n[$target$b for $target$b in []]";
   assert_qualify_statement "\nif b:\n\tb\nelse:\n\tb" "\nif a:\n\ta\nelse:\n\ta";
   assert_qualify_statement "raise b" "raise a";
   assert_qualify_statement "return b" "return a";
@@ -5005,6 +5034,12 @@ let test_populate_unbound_names _ =
         derp
     |}
     ~expected:[!&"foo", []];
+  assert_unbound_names
+    {|
+      def foo() -> None:
+        (x := derp)
+    |}
+    ~expected:[!&"foo", ["derp", location (3, 8) (3, 12)]];
   assert_unbound_names
     {|
       import derp

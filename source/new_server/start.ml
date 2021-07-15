@@ -9,10 +9,20 @@ open Core
 module Path = Pyre.Path
 
 module ServerEvent = struct
+  module ErrorKind = struct
+    type t =
+      | Watchman
+      | BuckInternal
+      | BuckUser
+      | Pyre
+      | Unknown
+    [@@deriving sexp, compare, hash, to_yojson]
+  end
+
   type t =
     | SocketCreated of Path.t
     | ServerInitialized
-    | Exception of string
+    | Exception of string * ErrorKind.t
   [@@deriving sexp, compare, hash, to_yojson]
 
   let serialize event = to_yojson event |> Yojson.Safe.to_string
@@ -92,7 +102,19 @@ let handle_request ~state request =
         ~server_configuration
         "Restarting Pyre server due to unexpected crash"
     in
-    Statistics.log_exception exn ~fatal:true ~origin:"server";
+    let origin =
+      match exn with
+      | Buck.Raw.BuckError _
+      | Buck.Builder.JsonError _
+      | Buck.Builder.LinkTreeConstructionError _ ->
+          "buck"
+      | Watchman.ConnectionError _
+      | Watchman.SubscriptionError _
+      | Watchman.QueryError _ ->
+          "watchman"
+      | _ -> "server"
+    in
+    Statistics.log_exception exn ~fatal:true ~origin;
     Stop.log_and_stop_waiting_server ~reason:"uncaught exception" ~state ()
   in
   Lwt.catch
@@ -451,8 +473,8 @@ let initialize_server_state
   in
   let build_system_initializer =
     let from_source_paths = function
-      | ServerConfiguration.SourcePaths.Simple _ -> BuildSystem.Initializer.null
-      | ServerConfiguration.SourcePaths.Buck buck_options ->
+      | Configuration.SourcePaths.Simple _ -> BuildSystem.Initializer.null
+      | Configuration.SourcePaths.Buck buck_options ->
           let raw = Buck.Raw.create () in
           BuildSystem.Initializer.buck ~raw buck_options
     in
@@ -462,6 +484,8 @@ let initialize_server_state
   get_initial_state ~build_system_initializer ()
   >>= fun state ->
   Log.info "Server state initialized.";
+  if configuration.debug then
+    Memory.report_statistics ();
   store_initial_state state;
   Lwt.return (ExclusiveLock.create state)
 
@@ -624,30 +648,43 @@ let start_server_and_wait ?event_channel server_configuration =
               return ExitStatus.Error);
         ])
     ~on_exception:(fun exn ->
-      let message =
+      let kind, message =
         match exn with
-        | Buck.Raw.BuckError { arguments; description } ->
-            Format.sprintf
-              "Cannot build the project: %s. To reproduce this error, run `%s`."
-              description
-              (String.concat ~sep:" " ("buck" :: arguments))
+        | Buck.Raw.BuckError { arguments; description; exit_code } ->
+            (* Buck exit code >=10 are considered internal:
+               https://buck.build/command/exit_codes.html *)
+            let kind =
+              match exit_code with
+              | Some exit_code when exit_code < 10 -> ServerEvent.ErrorKind.BuckUser
+              | _ -> ServerEvent.ErrorKind.BuckInternal
+            in
+            ( kind,
+              Format.sprintf
+                "Cannot build the project: %s. To reproduce this error, run `%s`."
+                description
+                (Buck.Raw.ArgumentList.to_buck_command arguments) )
         | Buck.Builder.JsonError message ->
-            Format.sprintf
-              "Cannot build the project because Buck returns malformed JSON: %s"
-              message
+            ( ServerEvent.ErrorKind.Pyre,
+              Format.sprintf
+                "Cannot build the project because Buck returns malformed JSON: %s"
+                message )
         | Buck.Builder.LinkTreeConstructionError message ->
-            Format.sprintf
-              "Cannot build the project because Pyre encounters a fatal error while constructing a \
-               link tree: %s"
-              message
-        | Watchman.ConnectionError message -> Format.sprintf "Watchman connection error: %s" message
+            ( ServerEvent.ErrorKind.Pyre,
+              Format.sprintf
+                "Cannot build the project because Pyre encounters a fatal error while constructing \
+                 a link tree: %s"
+                message )
+        | Watchman.ConnectionError message ->
+            ServerEvent.ErrorKind.Watchman, Format.sprintf "Watchman connection error: %s" message
         | Watchman.SubscriptionError message ->
-            Format.sprintf "Watchman subscription error: %s" message
-        | Watchman.QueryError message -> Format.sprintf "Watchman query error: %s" message
+            ServerEvent.ErrorKind.Watchman, Format.sprintf "Watchman subscription error: %s" message
+        | Watchman.QueryError message ->
+            ServerEvent.ErrorKind.Watchman, Format.sprintf "Watchman query error: %s" message
         | Unix.Unix_error (Unix.EADDRINUSE, _, _) ->
-            "A Pyre server is already running for the current project. Use `pyre stop` to stop it \
-             before starting another one."
-        | _ -> Exn.to_string exn
+            ( ServerEvent.ErrorKind.Pyre,
+              "A Pyre server is already running for the current project. Use `pyre stop` to stop \
+               it before starting another one." )
+        | _ -> ServerEvent.ErrorKind.Unknown, Exn.to_string exn
       in
       Log.info "%s" message;
-      write_event (ServerEvent.Exception message) >>= fun () -> return ExitStatus.Error)
+      write_event (ServerEvent.Exception (message, kind)) >>= fun () -> return ExitStatus.Error)

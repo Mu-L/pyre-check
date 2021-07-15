@@ -238,11 +238,6 @@ and kind =
       target: Expression.t;
       kind: illegal_annotation_target_kind;
     }
-  | ImpossibleAssertion of {
-      expression: Expression.t;
-      annotation: Type.t;
-      test: Expression.t;
-    }
   | IncompatibleAsyncGeneratorReturnType of Type.t
   | IncompatibleAttributeType of {
       parent: Type.t;
@@ -355,6 +350,7 @@ and kind =
       missing_key: string;
     }
   | UnboundName of Identifier.t
+  | UninitializedLocal of Identifier.t
   | UndefinedAttribute of {
       attribute: Identifier.t;
       origin: origin;
@@ -397,6 +393,12 @@ and kind =
   | DeadStore of Identifier.t
   | Deobfuscation of Source.t
   | UnawaitedAwaitable of unawaited_awaitable
+  (* Errors from run-time edge cases *)
+  | BroadcastError of {
+      expression: Expression.t;
+      left: Type.t;
+      right: Type.t;
+    }
 [@@deriving compare, eq, sexp, show, hash]
 
 include BaseError.Error with type kind := kind

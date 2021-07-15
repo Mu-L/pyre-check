@@ -6,17 +6,35 @@
  *)
 
 open Core
+open Pyre
 open OUnit2
 open Ast
 module TypeAnalysis = Analysis
 open Interprocedural
 open Test
 
-let setup_environment ~context ?(sources = []) () =
+let setup_scratch_project ~context ?(sources = []) () = ScratchProject.setup ~context sources
+
+let setup_environment scratch_project =
   let { ScratchProject.BuiltGlobalEnvironment.global_environment; _ } =
-    ScratchProject.setup ~context sources |> ScratchProject.build_global_environment
+    scratch_project |> ScratchProject.build_global_environment
   in
   global_environment
+
+
+let static_analysis_configuration { ScratchProject.configuration; _ } =
+  {
+    Configuration.StaticAnalysis.result_json_path = None;
+    dump_call_graph = false;
+    verify_models = false;
+    configuration;
+    rule_filter = None;
+    find_missing_flows = None;
+    dump_model_query_results = false;
+    use_cache = false;
+    maximum_trace_length = None;
+    maximum_tito_depth = None;
+  }
 
 
 module ResultA = Interprocedural.Result.Make (struct
@@ -30,151 +48,116 @@ module ResultA = Interprocedural.Result.Make (struct
 
   let obscure_model = -1
 
-  let get_errors _ = []
-
   let join ~iteration:_ a b = a + b
 
   let widen ~iteration ~previous ~next = join ~iteration previous next
 
   let reached_fixpoint ~iteration:_ ~previous ~next = next <= previous
 
-  let externalize ~filename_lookup:_ callable result_option model =
-    let result_json =
-      match result_option with
-      | None -> `Null
-      | Some result -> `String result
-    in
-    [
-      `Assoc
-        [
-          "analysis", `String name;
-          "name", `String (Callable.show callable);
-          "model", `Int model;
-          "result", result_json;
-        ];
-    ]
-
-
-  let metadata () = `Assoc ["codes", `List [`String "A"]]
-
-  let statistics () = `Assoc ["model_verification_errors", `Int 0]
-
   let strip_for_callsite model = model
 end)
 
 module AnalysisA = ResultA.Register (struct
-  let init ~configuration:_ ~scheduler:_ ~environment:_ ~functions:_ ~stubs:_ =
-    { Result.initial_models = Callable.Map.empty; skip_overrides = Ast.Reference.Set.empty }
+  let initialize_configuration ~static_analysis_configuration:_ = ()
+
+  let initialize_models
+      ~scheduler:_
+      ~static_analysis_configuration:_
+      ~environment:_
+      ~functions:_
+      ~stubs:_
+    =
+    Result.InitializedModels.empty
 
 
-  let analyze ~callable:_ ~environment:_ ~qualifier:_ ~define:_ ~existing:_ = "A", 5
-end)
+  let analyze ~environment:_ ~callable:_ ~qualifier:_ ~define:_ ~existing:_ = "A", 5
 
-module ResultB = Interprocedural.Result.Make (struct
-  type result = int
-
-  type call_model = string [@@deriving show]
-
-  let name = "analysisB"
-
-  let empty_model = "empty"
-
-  let obscure_model = "obscure"
-
-  let get_errors _ = []
-
-  let join ~iteration:_ a b = a ^ b
-
-  let widen ~iteration ~previous ~next = join ~iteration previous next
-
-  let reached_fixpoint ~iteration:_ ~previous ~next = String.(next <= previous)
-
-  let externalize ~filename_lookup:_ callable result_option model =
-    let result_json =
-      match result_option with
-      | None -> `Null
-      | Some result -> `Int result
-    in
-    [
+  let report
+      ~scheduler:_
+      ~static_analysis_configuration:_
+      ~environment:_
+      ~filename_lookup:_
+      ~callables
+      ~skipped_overrides:_
+      ~fixpoint_timer:_
+      ~fixpoint_iterations:_
+    =
+    let get_model callable : Yojson.Safe.json =
+      let model =
+        Fixpoint.get_model callable
+        >>= Result.get_model ResultA.kind
+        >>| (fun r -> `Int r)
+        |> Option.value ~default:`Null
+      in
+      let result =
+        Fixpoint.get_result callable
+        |> Result.get_result ResultA.kind
+        >>| (fun r -> `String r)
+        |> Option.value ~default:`Null
+      in
       `Assoc
         [
-          "analysis", `String name;
-          "name", `String (Callable.show callable);
-          "model", `String model;
-          "result", result_json;
-        ];
-    ]
-
-
-  let metadata () = `Assoc ["codes", `List [`String "B"]]
-
-  let statistics () = `Assoc ["errors", `Int 1]
-
-  let strip_for_callsite model = model
+          "analysis", `String ResultA.name;
+          "callable", `String (Callable.show callable);
+          "model", model;
+          "result", result;
+        ]
+    in
+    callables |> Callable.Set.elements |> List.map ~f:get_model
 end)
 
-module AnalysisB = ResultB.Register (struct
-  let init ~configuration:_ ~scheduler:_ ~environment:_ ~functions:_ ~stubs:_ =
-    { Result.initial_models = Callable.Map.empty; skip_overrides = Reference.Set.empty }
+let analysis = AnalysisA.abstract_kind
 
-
-  let analyze ~callable:_ ~environment:_ ~qualifier:_ ~define:_ ~existing:_ = 7, "B"
-end)
-
-let analyses = [AnalysisA.abstract_kind; AnalysisB.abstract_kind]
-
-let assert_summaries ~expected summaries =
+let assert_report ~expected report =
   let json_printer jsons = String.concat ~sep:"\n" (List.map ~f:Yojson.Safe.to_string jsons) in
-  let expected = List.map ~f:Yojson.Safe.from_string expected in
-  assert_equal ~printer:json_printer ~msg:"json summaries" expected summaries
+  let sort_json json =
+    json |> List.sort ~compare:String.compare |> List.map ~f:Yojson.Safe.from_string
+  in
+  let expected = sort_json expected in
+  let report = report |> List.map ~f:Yojson.Safe.to_string |> sort_json in
+  assert_equal ~printer:json_printer ~msg:"json report" expected report
 
 
 let test_unknown_function_analysis context =
-  let targets =
-    List.map ~f:Reference.create ["fun_a"; "fun_b"; "fun_c"]
-    |> List.map ~f:(fun name -> Callable.create_function name)
-  in
-  let step = Fixpoint.{ epoch = 1; iteration = 0 } in
+  let callable_of_string name = name |> Reference.create |> Callable.create_function in
+  let targets = List.map ["fun_a"; "fun_b"] ~f:callable_of_string in
+  let scratch_project = setup_scratch_project ~context () in
   let environment =
-    setup_environment ~context ()
+    setup_environment scratch_project
     |> TypeAnalysis.TypeEnvironment.create
     |> TypeAnalysis.TypeEnvironment.read_only
   in
-  let _ = Analysis.one_analysis_pass ~step ~analyses ~environment ~callables:targets in
+  let step = Fixpoint.{ epoch = 1; iteration = 0 } in
+  let _ = Analysis.one_analysis_pass ~step ~analysis ~environment ~callables:targets in
+  (* Make sure obscure models are correctly handled *)
   let check_obscure_model target =
     match Fixpoint.get_model target with
     | None ->
         Format.sprintf "no model stored for target %s" (Callable.show target) |> assert_failure
     | Some models ->
-        assert_equal (Result.get_model ResultA.kind models) (Some ResultA.obscure_model);
-        assert_equal (Result.get_model ResultB.kind models) (Some ResultB.obscure_model)
-  in
-  let externalized_A =
-    List.concat_map
-      ~f:(Analysis.externalize ~filename_lookup:(fun _ -> None) AnalysisA.abstract_kind)
-      targets
-  in
-  let externalized_B =
-    List.concat_map
-      ~f:(Analysis.externalize ~filename_lookup:(fun _ -> None) AnalysisB.abstract_kind)
-      targets
+        assert_equal (Result.get_model ResultA.kind models) (Some ResultA.obscure_model)
   in
   List.iter ~f:check_obscure_model targets;
-  assert_summaries
-    externalized_A
+  (* Make sure result extraction works (this verifies a lot of the type magic) *)
+  let report =
+    let static_analysis_configuration = static_analysis_configuration scratch_project in
+    Analysis.report_results
+      ~scheduler:(Test.mock_scheduler ())
+      ~static_analysis_configuration
+      ~environment
+      ~analysis
+      ~filename_lookup:(fun _ -> None)
+      ~callables:(targets |> Callable.Set.of_list)
+      ~skipped_overrides:[]
+      ~fixpoint_timer:(Timer.start ())
+      ~fixpoint_iterations:None
+  in
+  assert_report
+    report
     ~expected:
       [
-        {| {"analysis":"analysisA","name":"fun_a (fun)","model":-1,"result":null} |};
-        {| {"analysis":"analysisA","name":"fun_b (fun)","model":-1,"result":null} |};
-        {| {"analysis":"analysisA","name":"fun_c (fun)","model":-1,"result":null} |};
-      ];
-  assert_summaries
-    externalized_B
-    ~expected:
-      [
-        {| {"analysis":"analysisB","name":"fun_a (fun)","model":"obscure","result":null} |};
-        {| {"analysis":"analysisB","name":"fun_b (fun)","model":"obscure","result":null} |};
-        {| {"analysis":"analysisB","name":"fun_c (fun)","model":"obscure","result":null} |};
+        {| {"analysis":"analysisA","callable":"fun_a (fun)","model":-1,"result":null} |};
+        {| {"analysis":"analysisA","callable":"fun_b (fun)","model":-1,"result":null} |};
       ]
 
 
@@ -202,11 +185,12 @@ let test_meta_data context =
   in
   let step1 = Fixpoint.{ epoch = 1; iteration = 0 } in
   let environment =
-    setup_environment ~context ()
+    setup_scratch_project ~context ()
+    |> setup_environment
     |> TypeAnalysis.TypeEnvironment.create
     |> TypeAnalysis.TypeEnvironment.read_only
   in
-  let _ = Analysis.one_analysis_pass ~step:step1 ~analyses ~environment ~callables:targets in
+  let _ = Analysis.one_analysis_pass ~step:step1 ~analysis ~environment ~callables:targets in
   (* All obscure functions should reach fixpoint in 1st step *)
   let () = List.iter ~f:(check_meta_data ~step:step1 ~is_partial:false) targets in
   ()

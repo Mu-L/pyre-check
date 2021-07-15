@@ -444,7 +444,7 @@ module Make (Config : CONFIG) (Element : ELEMENT) () = struct
     =
     if must_widen_depth widen_depth then
       (* Collapse left_tree and right_tree to achieve depth limit. Note that left_tree is a leaf,
-         only if the widen depth was exactly the depth of left_tree.  *)
+         only if the widen depth was exactly the depth of left_tree. *)
       let collapsed_left_element =
         collapse ~transform:transform_on_collapse ~widen_depth left_tree
       in
@@ -495,7 +495,6 @@ module Make (Config : CONFIG) (Element : ELEMENT) () = struct
          joined.[l] = left_tree[l] merge right_star if l in L
          joined.[r] = right_tree[r] merge left_star if r in R
          joined.[<keys>] = left_tree[<keys>] merge right_tree[<keys>]
-
     *)
     let left_star = LabelMap.find_opt Label.AnyIndex left_tree in
     let right_star = LabelMap.find_opt Label.AnyIndex right_tree in
@@ -976,8 +975,8 @@ module Make (Config : CONFIG) (Element : ELEMENT) () = struct
   let get_root { element; _ } = element
 
   (** Filter map over tree, where each non-bottom element node is visited. The function ~f is passed
-      the path to the node, the joined ancestor elements, and the non-bottom element at the node and
-      returns a new Element to substitute (possibly bottom). *)
+      the path to the node and the non-bottom element at the node and returns a new Element to
+      substitute (possibly bottom). *)
   let filter_map_tree_paths ~f tree =
     let build ~path ~element access_path_tree =
       let new_path, element = f ~path ~element in
@@ -1055,7 +1054,7 @@ module Make (Config : CONFIG) (Element : ELEMENT) () = struct
       |> check_join_property prev next
 
 
-    let transform : type a f. a part -> ([ `Transform ], a, f, t, t) operation -> f:f -> t -> t =
+    let transform : type a f. a part -> ([ `Transform ], a, f, _) operation -> f:f -> t -> t =
      fun part op ~f tree ->
       match part, op with
       | Path, Map ->
@@ -1074,19 +1073,17 @@ module Make (Config : CONFIG) (Element : ELEMENT) () = struct
             tree
       | _, Context (Path, op) ->
           let transform_node ~path ~element =
-            path, Element.transform part (Base.freshen_transform op) ~f:(f (path, element)) element
+            path, Element.transform part op ~f:(f (path, element)) element
           in
           filter_map_tree_paths ~f:transform_node tree
       | (Path | Self), _ -> Base.transform part op ~f tree
       | _ ->
-          let transform_node ~path ~element =
-            path, Element.transform part (Base.freshen_transform op) ~f element
-          in
+          let transform_node ~path ~element = path, Element.transform part op ~f element in
           filter_map_tree_paths ~f:transform_node tree
 
 
     let reduce
-        : type a f b. a part -> using:([ `Reduce ], a, f, t, b) operation -> f:f -> init:b -> t -> b
+        : type a f b. a part -> using:([ `Reduce ], a, f, b) operation -> f:f -> init:b -> t -> b
       =
      fun part ~using:op ~f ~init tree ->
       match part, op with
@@ -1098,25 +1095,19 @@ module Make (Config : CONFIG) (Element : ELEMENT) () = struct
           init || fold_tree_paths ~init ~f:fold_tree_node tree
       | _, Context (Path, op) ->
           let fold_tree_node ~path ~element accumulator =
-            Element.reduce
-              part
-              ~using:(Base.freshen_reduce op)
-              ~f:(f (path, element))
-              ~init:accumulator
-              element
+            Element.reduce part ~using:op ~f:(f (path, element)) ~init:accumulator element
           in
           fold_tree_paths ~init ~f:fold_tree_node tree
       | (Path | Self), _ -> Base.reduce part ~using:op ~f ~init tree
       | _ ->
           let fold_tree_node ~path:_ ~element accumulator =
-            Element.reduce part ~using:(Base.freshen_reduce op) ~init:accumulator ~f element
+            Element.reduce part ~using:op ~init:accumulator ~f element
           in
           fold_tree_paths ~init ~f:fold_tree_node tree
 
 
     let partition
-        : type a f b.
-          a part -> ([ `Partition ], a, f, t, b) operation -> f:f -> t -> (b, t) MapPoly.t
+        : type a f b. a part -> ([ `Partition ], a, f, b) operation -> f:f -> t -> (b, t) MapPoly.t
       =
      fun part op ~f tree ->
       let update path element existing =
@@ -1141,9 +1132,7 @@ module Make (Config : CONFIG) (Element : ELEMENT) () = struct
           fold_tree_paths ~init:MapPoly.empty ~f:partition tree
       | _, Context (Path, op) ->
           let partition ~path ~element result =
-            let element_partition =
-              Element.partition part (Base.freshen_partition op) ~f:(f (path, element)) element
-            in
+            let element_partition = Element.partition part op ~f:(f (path, element)) element in
             let distribute ~key ~data result = MapPoly.update result key ~f:(update path data) in
             MapPoly.fold ~init:result ~f:distribute element_partition
           in
@@ -1151,7 +1140,7 @@ module Make (Config : CONFIG) (Element : ELEMENT) () = struct
       | (Path | Self), _ -> Base.partition part op ~f tree
       | _ ->
           let partition ~path ~element result =
-            let element_partition = Element.partition part (Base.freshen_partition op) ~f element in
+            let element_partition = Element.partition part op ~f element in
             let distribute ~key ~data result = MapPoly.update result key ~f:(update path data) in
             MapPoly.fold ~init:result ~f:distribute element_partition
           in
@@ -1171,7 +1160,7 @@ module Make (Config : CONFIG) (Element : ELEMENT) () = struct
           match part with
           | Path -> Format.sprintf "Tree.Path"
           | Self -> Format.sprintf "Tree.Self"
-          | _ -> Base.introspect op )
+          | _ -> Element.introspect op )
 
 
     let create parts =

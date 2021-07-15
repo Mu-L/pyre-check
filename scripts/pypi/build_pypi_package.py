@@ -135,13 +135,23 @@ def _sync_stubs(pyre_directory: Path, build_root: Path) -> None:
     )
 
 
+def _sync_sapp_filters(pyre_directory: Path, build_root: Path) -> None:
+    _rsync_files(
+        [],
+        pyre_directory / "tools" / "sapp" / "pysa_filters",
+        build_root,
+        [
+            "--recursive",
+            "--prune-empty-dirs",
+            "--verbose",
+        ],
+    )
+
+
 def _sync_typeshed(build_root: Path, typeshed_path: Path) -> None:
     typeshed_target = build_root / "typeshed"
     _rsync_files(
         ["+ */", "-! *.pyi"], typeshed_path / "stdlib", typeshed_target, ["-avm"]
-    )
-    _rsync_files(
-        ["+ */", "-! *.pyi"], typeshed_path / "third_party", typeshed_target, ["-avm"]
     )
     _rsync_files(
         ["+ */", "-! *.pyi"], typeshed_path / "stubs", typeshed_target, ["-avm"]
@@ -157,14 +167,13 @@ def _sync_typeshed(build_root: Path, typeshed_path: Path) -> None:
             "--verbose",
             "--chmod='+w'",
             "--include='stdlib/***'",
-            "--include='third_party/***'",
             "--exclude='*'",
         ],
     )
 
 
 def _patch_version(version: str, build_root: Path) -> None:
-    file_contents = "__version__ = {}".format(version)
+    file_contents = f'__version__ = "{version}"'
     (build_root / MODULE_NAME / "client/version.py").write_text(file_contents)
 
 
@@ -178,6 +187,13 @@ def _sync_binary(pyre_directory: Path, build_root: Path) -> None:
         pyre_directory / "source" / "_build/default/main.exe",
         build_root / "bin/pyre.bin",
     )
+
+
+def _strip_binary(build_root: Path) -> None:
+    binary_path = build_root / "bin/pyre.bin"
+    result = subprocess.run(["strip", str(binary_path)])
+    if result.returncode != 0:
+        LOG.warning("Unable to strip debugging info from binary.")
 
 
 def _sync_documentation_files(pyre_directory: Path, build_root: Path) -> None:
@@ -276,21 +292,26 @@ def build_pypi_package(
     with tempfile.TemporaryDirectory() as build_root:
         build_path = Path(build_root)
         _add_init_files(build_path, version)
-        _patch_version(version, build_path)
         _create_setup_py(pyre_directory, version, build_path, nightly)
 
         _sync_python_files(pyre_directory, build_path)
         _sync_pysa_stubs(pyre_directory, build_path)
         _sync_stubs(pyre_directory, build_path)
         _sync_typeshed(build_path, typeshed_path)
+        _sync_sapp_filters(pyre_directory, build_path)
         _sync_binary(pyre_directory, build_path)
+        _strip_binary(build_path)
         _sync_documentation_files(pyre_directory, build_path)
 
+        _patch_version(version, build_path)
+
+        # pyre-fixme[6]: Expected `Path` for 2nd param but got `str`.
         _run_setup_command(pyre_directory, build_root, version, "sdist", nightly)
         _create_dist_directory(pyre_directory)
         _create_setup_configuration(build_path)
         twine_check([path.as_posix() for path in (build_path / "dist").iterdir()])
 
+        # pyre-fixme[6]: Expected `Path` for 2nd param but got `str`.
         _run_setup_command(pyre_directory, build_root, version, "bdist_wheel", nightly)
         wheel_destination, distribution_destination = _rename_and_move_artifacts(
             pyre_directory, build_path

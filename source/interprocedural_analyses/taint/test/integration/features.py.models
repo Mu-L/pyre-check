@@ -393,24 +393,20 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "features.dynamic_feature_tito",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(x)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "dynamic_feature" } ]
           }
         ]
@@ -422,15 +418,13 @@
   "kind": "model",
   "data": {
     "callable": "features.len",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(o)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "always-type": "scalar" } ]
           }
         ]
@@ -442,15 +436,13 @@
   "kind": "model",
   "data": {
     "callable": "features.min",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(y)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       },
@@ -459,7 +451,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "always-type": "scalar" } ]
           }
         ]
@@ -471,15 +463,13 @@
   "kind": "model",
   "data": {
     "callable": "features.named",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(named_parameter)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "always-type": "scalar" } ]
           }
         ]
@@ -530,9 +520,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -555,17 +543,13 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "features.tito_via_constructor",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(o)",
@@ -573,7 +557,7 @@
           {
             "decl": null,
             "tito": [ { "line": 46, "start": 15, "end": 16 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [
               { "always-type": "scalar" },
               { "always-via": "obscure" }
@@ -588,8 +572,6 @@
   "kind": "model",
   "data": {
     "callable": "features.tito_via_len",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(o)",
@@ -597,7 +579,7 @@
           {
             "decl": null,
             "tito": [ { "line": 23, "start": 15, "end": 16 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [
               { "always-type": "scalar" },
               { "always-via": "tito" }
@@ -612,8 +594,6 @@
   "kind": "model",
   "data": {
     "callable": "features.tito_via_min_left",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(o)",
@@ -621,7 +601,7 @@
           {
             "decl": null,
             "tito": [ { "line": 27, "start": 15, "end": 16 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [
               { "always-type": "scalar" },
               { "always-via": "tito" }
@@ -636,8 +616,6 @@
   "kind": "model",
   "data": {
     "callable": "features.tito_via_min_or_not",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(o)",
@@ -645,7 +623,7 @@
           {
             "decl": null,
             "tito": [ { "line": 40, "start": 19, "end": 20 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "type": "scalar" }, { "via": "tito" } ]
           }
         ]
@@ -657,8 +635,6 @@
   "kind": "model",
   "data": {
     "callable": "features.tito_via_min_right",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(o)",
@@ -666,7 +642,7 @@
           {
             "decl": null,
             "tito": [ { "line": 31, "start": 18, "end": 19 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -678,8 +654,6 @@
   "kind": "model",
   "data": {
     "callable": "features.tito_via_named",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(o)",
@@ -687,7 +661,7 @@
           {
             "decl": null,
             "tito": [ { "line": 35, "start": 33, "end": 34 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [
               { "always-type": "scalar" },
               { "always-via": "tito" }
@@ -702,8 +676,6 @@
   "kind": "model",
   "data": {
     "callable": "features.tito_with_tuple",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(o)",
@@ -715,8 +687,8 @@
               { "line": 84, "start": 34, "end": 35 }
             ],
             "leaves": [
-              { "kind": "LocalReturn", "name": "[1]" },
-              { "kind": "LocalReturn", "name": "[0]" }
+              { "kind": "LocalReturn", "name": "[1]", "depth": 0 },
+              { "kind": "LocalReturn", "name": "[0]", "depth": 0 }
             ],
             "features": [ { "type": "scalar" }, { "via": "tito" } ]
           }

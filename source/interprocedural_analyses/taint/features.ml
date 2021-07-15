@@ -45,7 +45,7 @@ module TitoPosition = struct
 
   type t = Location.t [@@deriving show, compare]
 
-  let max_count () = Configuration.maximum_tito_positions
+  let max_count () = TaintConfiguration.maximum_tito_positions
 end
 
 module TitoPositionSet = Abstract.ToppedSetDomain.Make (TitoPosition)
@@ -156,9 +156,11 @@ module Simple = struct
 
   let via_value_of_breadcrumb ?tag ~argument =
     let feature =
-      argument
-      >>= Interprocedural.CallResolution.extract_constant_name
-      |> Option.value ~default:"<unknown>"
+      match argument with
+      | None -> "<missing>"
+      | Some argument ->
+          Interprocedural.CallResolution.extract_constant_name argument
+          |> Option.value ~default:"<unknown>"
     in
     Breadcrumb (Breadcrumb.ViaValue { value = feature; tag })
 
@@ -177,33 +179,41 @@ end
 
 module SimpleSet = Abstract.OverUnderSetDomain.Make (Simple)
 
-(* Set of complex features, where element can be abstracted and joins are expensive. Should only be
-   used for elements that need this kind of joining. *)
-module Complex = struct
-  let name = "complex features"
+module ReturnAccessPath = struct
+  let name = "return access paths"
 
-  type t = ReturnAccessPath of Abstract.TreeDomain.Label.path
-  [@@deriving show { with_path = false }, compare]
+  type t = Abstract.TreeDomain.Label.path [@@deriving show { with_path = false }, compare]
 
-  let less_or_equal ~left ~right =
-    match left, right with
-    | ReturnAccessPath left_path, ReturnAccessPath right_path ->
-        Abstract.TreeDomain.Label.is_prefix ~prefix:right_path left_path
+  let less_or_equal ~left ~right = Abstract.TreeDomain.Label.is_prefix ~prefix:right left
+
+  let common_prefix = function
+    | head :: tail -> List.fold ~init:head ~f:Abstract.TreeDomain.Label.common_prefix tail
+    | [] -> []
 
 
   let widen set =
-    let truncate = function
-      | ReturnAccessPath p when List.length p > Configuration.maximum_return_access_path_depth ->
-          ReturnAccessPath (List.take p Configuration.maximum_return_access_path_depth)
-      | x -> x
-    in
-    if List.length set > Configuration.maximum_return_access_path_width then
-      [ReturnAccessPath []]
+    if List.length set > TaintConfiguration.maximum_return_access_path_width then
+      [common_prefix set]
     else
+      let truncate = function
+        | p when List.length p > TaintConfiguration.maximum_return_access_path_depth ->
+            List.take p TaintConfiguration.maximum_return_access_path_depth
+        | x -> x
+      in
       List.map ~f:truncate set
 end
 
-module ComplexSet = Abstract.ElementSetDomain.Make (Complex)
+module ReturnAccessPathSet = struct
+  module T = Abstract.ElementSetDomain.Make (ReturnAccessPath)
+  include T
+
+  let join left right =
+    let set = T.join left right in
+    if T.count set > TaintConfiguration.maximum_return_access_path_width then
+      set |> T.elements |> ReturnAccessPath.common_prefix |> T.singleton
+    else
+      set
+end
 
 let obscure = Simple.Breadcrumb Breadcrumb.Obscure
 

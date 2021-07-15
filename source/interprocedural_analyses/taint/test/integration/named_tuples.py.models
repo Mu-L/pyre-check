@@ -189,15 +189,15 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{named_tuples.MyNamedTuple::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(bad)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -206,7 +206,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ],
             "features": [ { "always-type": "scalar" } ]
           }
         ]
@@ -216,7 +218,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -225,7 +229,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       },
@@ -234,7 +238,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       }
@@ -245,15 +251,15 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{named_tuples.OldSchoolNamedTuple::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(bad)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -262,7 +268,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -271,7 +279,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -280,7 +290,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       },
@@ -289,7 +299,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       }
@@ -300,15 +312,15 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{typing.NamedTuple::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(bad)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -317,7 +329,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ],
             "features": [ { "type": "scalar" } ]
           }
         ]
@@ -327,7 +341,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -336,7 +352,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       },
@@ -345,7 +361,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       }
@@ -356,15 +374,15 @@
   "kind": "model",
   "data": {
     "callable": "named_tuples.MyNamedTuple.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(bad)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -373,7 +391,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ],
             "features": [ { "always-type": "scalar" } ]
           }
         ]
@@ -383,7 +403,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -392,7 +414,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       },
@@ -401,7 +423,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       }
@@ -412,15 +436,15 @@
   "kind": "model",
   "data": {
     "callable": "named_tuples.OldSchoolNamedTuple.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(bad)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -429,7 +453,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -438,7 +464,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[bad]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[bad]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -447,7 +475,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       },
@@ -456,7 +484,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       }
@@ -487,9 +517,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -516,9 +544,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -545,8 +571,6 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }

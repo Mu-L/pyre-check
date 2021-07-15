@@ -64,15 +64,15 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{callables.AbstractEventProcessor::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(benign)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -81,7 +81,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[tainted]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[tainted]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -90,7 +92,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -101,7 +103,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{callables.AbstractEventProcessor::async_call_tainted}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[tainted]",
@@ -118,15 +119,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{callables.AbstractEventProcessor::async_run}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[benign]",
@@ -143,15 +142,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{callables.ConcreteEventProcessor::async_call_tainted}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[tainted]",
@@ -168,15 +165,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{callables.ConcreteEventProcessor::async_run}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[benign]",
@@ -193,16 +188,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{callables.ProcessorInfo::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(processor_type)",
@@ -210,7 +202,11 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[processor_type]" }
+              {
+                "kind": "LocalReturn",
+                "name": "[processor_type]",
+                "depth": 0
+              }
             ]
           }
         ]
@@ -220,7 +216,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -231,15 +227,15 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{type::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(benign)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -248,7 +244,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[tainted]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[tainted]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -258,7 +256,11 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[processor_type]" }
+              {
+                "kind": "LocalReturn",
+                "name": "[processor_type]",
+                "depth": 0
+              }
             ]
           }
         ]
@@ -268,7 +270,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -279,15 +281,15 @@
   "kind": "model",
   "data": {
     "callable": "callables.AbstractEventProcessor.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(benign)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[benign]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[benign]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -296,7 +298,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[tainted]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[tainted]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -305,7 +309,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -316,7 +320,6 @@
   "kind": "model",
   "data": {
     "callable": "callables.ConcreteEventProcessor.async_call_tainted",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[tainted]",
@@ -333,15 +336,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "callables.ConcreteEventProcessor.async_run",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[benign]",
@@ -358,16 +359,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "callables.ProcessorInfo.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(processor_type)",
@@ -375,7 +373,11 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[processor_type]" }
+              {
+                "kind": "LocalReturn",
+                "name": "[processor_type]",
+                "depth": 0
+              }
             ]
           }
         ]
@@ -385,7 +387,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }

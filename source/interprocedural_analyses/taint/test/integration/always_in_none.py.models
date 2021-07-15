@@ -9,14 +9,13 @@
         "taint": [ { "decl": null, "leaves": [ { "kind": "Test" } ] } ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "always-via": "string_concat_rhs" } ]
           }
         ]
@@ -28,7 +27,6 @@
   "kind": "model",
   "data": {
     "callable": "always_in_none.test",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(complicated_service)",
@@ -53,8 +51,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {

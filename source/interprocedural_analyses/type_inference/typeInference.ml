@@ -5,6 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  *)
 
+module Data = TypeInferenceData
+module Local = TypeInferenceLocal
+module Reporting = TypeInferenceReporting
 module Domain = TypeInferenceDomain
 module Result = TypeInferenceResult
 module Analysis = TypeInferenceAnalysis
+
+module Private = struct
+  module SharedMemory = TypeInferenceSharedMemory
+end

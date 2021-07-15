@@ -121,6 +121,8 @@ let test_delocalize _ =
   assert_delocalize "$local_qualifier$variable" "qualifier.variable";
   assert_delocalize "$local_base64$b64encode" "base64.b64encode";
   assert_delocalize "$local_module?qualifier$variable" "module.qualifier.variable";
+  assert_delocalize "$local_module?hyphenated-name$variable" "module.hyphenated-name.variable";
+  assert_delocalize "$local_$_T" "_T";
 
   (* Don't attempt to delocalize qualified expressions. *)
   assert_delocalize "qualifier.$local_qualifier$variable" "qualifier.$local_qualifier$variable"
@@ -175,6 +177,20 @@ let test_prefix _ =
   assert_last "a.b" "b"
 
 
+let test_map_last _ =
+  let assert_mapped ~f given expected =
+    assert_equal
+      ~cmp:Reference.equal
+      ~printer:Reference.show
+      (Reference.map_last ~f (Reference.create given))
+      (Reference.create expected)
+  in
+  assert_mapped ~f:(fun s -> s ^ "_suffix") "" "";
+  assert_mapped ~f:(fun s -> s ^ "_suffix") "a.b" "a.b_suffix";
+  assert_mapped ~f:Fn.id "a.b" "a.b";
+  ()
+
+
 let () =
   "reference"
   >::: [
@@ -183,5 +199,6 @@ let () =
          "name" >:: test_name;
          "delocalize" >:: test_delocalize;
          "prefix" >:: test_prefix;
+         "map_last" >:: test_map_last;
        ]
   |> Test.run

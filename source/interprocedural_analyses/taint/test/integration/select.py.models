@@ -2,6 +2,37 @@
 {
   "kind": "model",
   "data": {
+    "callable": "Obj{django.http.Request.GET}",
+    "sources": [
+      {
+        "port": "result",
+        "taint": [
+          { "decl": null, "leaves": [ { "kind": "UserControlled" } ] }
+        ]
+      }
+    ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
+    "callable": "dict.get",
+    "tito": [
+      {
+        "port": "formal(self)",
+        "taint": [
+          {
+            "decl": null,
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
+          }
+        ]
+      }
+    ]
+  }
+}
+{
+  "kind": "model",
+  "data": {
     "callable": "select.first_index",
     "sources": [
       {
@@ -23,9 +54,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -52,9 +81,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -81,9 +108,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -132,7 +157,7 @@
           {
             "decl": null,
             "tito": [ { "line": 41, "start": 11, "end": 22 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [
               { "has": "first-index" },
               { "first-index": "payload" },
@@ -231,8 +256,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -290,7 +314,6 @@
   "kind": "model",
   "data": {
     "callable": "select.view_entry_get",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(request)[GET]",
@@ -312,8 +335,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -407,8 +429,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {

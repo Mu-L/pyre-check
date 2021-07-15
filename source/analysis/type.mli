@@ -67,7 +67,7 @@ module Record : sig
 
       type 'annotation t [@@deriving compare, eq, sexp, show, hash]
 
-      val unpack_public_name : string
+      type 'annotation record_broadcast [@@deriving compare, eq, sexp, show, hash]
 
       val pp_unpackable
         :  pp_type:(Format.formatter -> 'annotation -> unit) ->
@@ -105,6 +105,32 @@ module Record : sig
         :  ?prefix:'annotation list ->
         ?suffix:'annotation list ->
         'annotation ->
+        'annotation t
+
+      val create_unpackable_from_concrete_against_concatenation
+        :  concrete:'annotation list ->
+        concatenation:'annotation t ->
+        'annotation record_unpackable
+
+      val create_unpackable_from_concatenation_against_concatenation
+        :  compare_t:('annotation -> 'annotation -> int) ->
+        'annotation t ->
+        'annotation t ->
+        'annotation record_unpackable
+
+      val create_from_concrete_against_concatenation
+        :  ?prefix:'annotation list ->
+        ?suffix:'annotation list ->
+        concrete:'annotation list ->
+        concatenation:'annotation t ->
+        'annotation t
+
+      val create_from_concatenation_against_concatenation
+        :  ?prefix:'annotation list ->
+        ?suffix:'annotation list ->
+        compare_t:('annotation -> 'annotation -> int) ->
+        'annotation t ->
+        'annotation t ->
         'annotation t
     end
 
@@ -223,6 +249,8 @@ module Monomial : sig
   type 'a variable [@@deriving compare, eq, sexp, show, hash]
 
   type 'a t [@@deriving eq, sexp, compare, hash, show]
+
+  val create_variable : 'a Record.Variable.RecordUnary.record -> 'a variable
 end
 
 module Polynomial : sig
@@ -258,6 +286,10 @@ module Polynomial : sig
     by:'a t ->
     variable:'a Monomial.variable ->
     'a t
+end
+
+module RecordIntExpression : sig
+  type 'a t = private Data of 'a Polynomial.t [@@deriving compare, eq, sexp, show, hash]
 end
 
 module Primitive : sig
@@ -302,8 +334,12 @@ and t =
   | Tuple of t Record.OrderedTypes.record
   | Union of t list
   | Variable of t Record.Variable.RecordUnary.record
-  | IntExpression of t Polynomial.t
+  | IntExpression of t RecordIntExpression.t
 [@@deriving compare, eq, sexp, show, hash]
+
+module IntExpression : sig
+  val create : t Polynomial.t -> t
+end
 
 type class_data = {
   instantiated: t;
@@ -475,6 +511,11 @@ module Callable : sig
     val default : parameter -> bool
 
     val names_compatible : parameter -> parameter -> bool
+
+    val zip
+      :  'a t list ->
+      'b t list ->
+      [ `Both of 'a t * 'b t | `Left of 'a t | `Right of 'b t ] list
   end
 
   include module type of struct
@@ -695,6 +736,8 @@ module OrderedTypes : sig
     :  parse_annotation:(Expression.t -> type_t) ->
     Expression.t ->
     type_t Concatenation.t option
+
+  val broadcast : type_t -> type_t -> type_t
 end
 
 val split : t -> t * Parameter.t list

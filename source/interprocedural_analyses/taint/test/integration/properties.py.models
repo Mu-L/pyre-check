@@ -363,24 +363,22 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{object::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(y)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[underlying]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[underlying]", "depth": 1 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -390,7 +388,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -402,15 +400,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{properties.Class::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -438,14 +434,13 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)[tainted]",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -478,14 +473,13 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)[tainted]",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -531,24 +525,20 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{properties.Derived::uses_property_but_no_tito_taint}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)[tainted]",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -579,16 +569,13 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{properties.DerivedTaintedSetter::my_property$setter}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(value)",
@@ -612,7 +599,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -623,15 +610,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{properties.GrandDerived::my_property$setter}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -658,24 +643,22 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{properties.PropertySetterInConstructor::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(y)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[underlying]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[underlying]", "depth": 1 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -685,7 +668,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -697,15 +680,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{properties.SetterMutatesValue::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -775,7 +756,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -808,23 +789,20 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "properties.Class.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -835,15 +813,13 @@
   "kind": "model",
   "data": {
     "callable": "properties.Class.my_property",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)[tainted]",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -876,7 +852,6 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(other)[tainted]",
@@ -884,7 +859,7 @@
           {
             "decl": null,
             "tito": [ { "line": 31, "start": 19, "end": 24 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -931,9 +906,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -962,7 +935,6 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)[tainted]",
@@ -970,7 +942,7 @@
           {
             "decl": null,
             "tito": [ { "line": 27, "start": 15, "end": 19 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -993,9 +965,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -1022,17 +992,13 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "properties.Derived.uses_property_but_no_tito_taint",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)[tainted]",
@@ -1040,7 +1006,7 @@
           {
             "decl": null,
             "tito": [ { "line": 43, "start": 15, "end": 19 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -1052,7 +1018,6 @@
   "kind": "model",
   "data": {
     "callable": "properties.DerivedTaintedSetter.my_property$setter",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(value)",
@@ -1076,7 +1041,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1087,15 +1052,13 @@
   "kind": "model",
   "data": {
     "callable": "properties.GrandDerived.my_property$setter",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1122,9 +1085,7 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
@@ -1152,17 +1113,13 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "properties.PropertySetterInConstructor.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(y)",
@@ -1170,7 +1127,9 @@
           {
             "decl": null,
             "tito": [ { "line": 149, "start": 17, "end": 18 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "[underlying]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[underlying]", "depth": 1 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -1181,7 +1140,7 @@
           {
             "decl": null,
             "tito": [ { "line": 149, "start": 8, "end": 12 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -1193,15 +1152,13 @@
   "kind": "model",
   "data": {
     "callable": "properties.PropertySetterInConstructor.x",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)[underlying]",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1212,15 +1169,15 @@
   "kind": "model",
   "data": {
     "callable": "properties.PropertySetterInConstructor.x$setter",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(x_value)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[underlying]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[underlying]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -1229,7 +1186,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1240,15 +1197,13 @@
   "kind": "model",
   "data": {
     "callable": "properties.SetterMutatesValue.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1259,15 +1214,13 @@
   "kind": "model",
   "data": {
     "callable": "properties.SetterMutatesValue.p",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)[_p]",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1278,15 +1231,15 @@
   "kind": "model",
   "data": {
     "callable": "properties.SetterMutatesValue.p$setter",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[_p]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[_p]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -1295,7 +1248,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1328,8 +1281,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -1362,7 +1314,6 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(value)",
@@ -1379,7 +1330,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1434,16 +1385,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "properties.test_type_variable_properties_are_resolved",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(x)[tainted]",
@@ -1451,7 +1399,7 @@
           {
             "decl": null,
             "tito": [ { "line": 143, "start": 11, "end": 12 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]

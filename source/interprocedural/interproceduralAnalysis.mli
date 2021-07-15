@@ -7,6 +7,26 @@
 
 module Kind = AnalysisKind
 
+val initialize_configuration
+  :  Kind.abstract ->
+  static_analysis_configuration:Configuration.StaticAnalysis.t ->
+  unit
+
+val initialize_models
+  :  Kind.abstract ->
+  scheduler:Scheduler.t ->
+  static_analysis_configuration:Configuration.StaticAnalysis.t ->
+  environment:Analysis.TypeEnvironment.ReadOnly.t ->
+  functions:Callable.t list ->
+  stubs:Callable.t list ->
+  InterproceduralResult.model_t InterproceduralResult.InitializedModels.t
+
+val record_initial_models
+  :  functions:Callable.t list ->
+  stubs:Callable.t list ->
+  InterproceduralResult.model_t Callable.Map.t ->
+  unit
+
 type expensive_callable = {
   time_to_analyze_in_ms: int;
   callable: Callable.t;
@@ -19,7 +39,7 @@ type result = {
 }
 
 val one_analysis_pass
-  :  analyses:Kind.abstract list ->
+  :  analysis:Kind.abstract ->
   step:Fixpoint.step ->
   environment:Analysis.TypeEnvironment.ReadOnly.t ->
   callables:Callable.t list ->
@@ -29,48 +49,23 @@ val one_analysis_pass
 val compute_fixpoint
   :  scheduler:Scheduler.t ->
   environment:Analysis.TypeEnvironment.ReadOnly.t ->
-  analyses:Kind.abstract list ->
+  analysis:Kind.abstract ->
   dependencies:DependencyGraph.t ->
   filtered_callables:Callable.Set.t ->
   all_callables:Callable.t list ->
   Fixpoint.Epoch.t ->
   int
 
-val externalize
-  :  filename_lookup:(Ast.Reference.t -> string option) ->
-  AnalysisKind.abstract ->
-  Callable.t ->
-  Yojson.Safe.json list
-
-val extract_errors : Scheduler.t -> Callable.t list -> InterproceduralError.t list
-
-val save_results
-  :  configuration:Configuration.StaticAnalysis.t ->
-  filename_lookup:(Ast.Reference.t -> string option) ->
-  analyses:AnalysisKind.abstract list ->
-  skipped_overrides:Ast.Reference.t list ->
-  Callable.Set.t ->
-  unit
-
-type initialize_result = {
-  initial_models: InterproceduralResult.model_t Callable.Map.t;
-  skip_overrides: Ast.Reference.Set.t;
-}
-
-(* Calls init on all specified analyses to get initial models *)
-val initialize
-  :  Kind.abstract list ->
-  configuration:Configuration.StaticAnalysis.t ->
-  scheduler:Scheduler.t ->
-  environment:Analysis.TypeEnvironment.ReadOnly.t ->
-  functions:Callable.t list ->
-  stubs:Callable.t list ->
-  initialize_result
-
-val record_initial_models
-  :  functions:Callable.t list ->
-  stubs:Callable.t list ->
-  InterproceduralResult.model_t Callable.Map.t ->
-  unit
-
 val strip_for_callsite : InterproceduralResult.model_t -> InterproceduralResult.model_t
+
+val report_results
+  :  scheduler:Scheduler.t ->
+  static_analysis_configuration:Configuration.StaticAnalysis.t ->
+  environment:Analysis.TypeEnvironment.ReadOnly.t ->
+  filename_lookup:(Ast.Reference.t -> string option) ->
+  analysis:Kind.abstract ->
+  callables:Callable.Set.t ->
+  skipped_overrides:Ast.Reference.t list ->
+  fixpoint_timer:Timer.t ->
+  fixpoint_iterations:int option ->
+  Yojson.Safe.json list

@@ -167,6 +167,25 @@ let test_check_attributes context =
     {|
       import typing
       class Foo:
+        bar = {}
+        baz = {"key": "string"}
+        def foo(self) -> None:
+          self.bar["key"] = 1
+          self.bar["key"] = "string"
+          self.baz["key"] = 1
+          self.baz["key"] = "string"
+    |}
+    [
+      "Incomplete type [37]: Type `typing.Dict[Variable[_KT], Variable[_VT]]` inferred for \
+       `test.Foo.bar` is incomplete, add an explicit annotation.";
+      "Missing attribute annotation [4]: Attribute `bar` of class `Foo` has no type specified.";
+      "Incompatible parameter type [6]: Expected `str` for 2nd positional only parameter to call \
+       `dict.__setitem__` but got `int`.";
+    ];
+  assert_type_errors
+    {|
+      import typing
+      class Foo:
         bar: typing.Any
         def foo(self) -> int:
           self.bar = 'foo'
@@ -1089,6 +1108,21 @@ let test_check_missing_attribute context =
   assert_type_errors
     {|
       class Foo:
+        def __init__(self) -> None:
+          self.a = []
+      def test(foo: Foo) -> None:
+        reveal_type(foo.a)
+    |}
+    [
+      "Incomplete type [37]: Type `typing.List[Variable[_T]]` inferred for `self.a` is incomplete, \
+       add an explicit annotation.";
+      "Missing attribute annotation [4]: Attribute `a` of class `Foo` has no type specified.";
+      (* TODO(T78211867): We should know `foo.a` is a `List`. *)
+      "Revealed type [-1]: Revealed type for `foo.a` is `unknown`.";
+    ];
+  assert_type_errors
+    {|
+      class Foo:
         def __init__(self, a) -> None:
           self.a = a
     |}
@@ -1356,7 +1390,7 @@ let test_attribute_type_variable_resolution context =
       def foo(self) -> None:
         reveal_type(self.property)
   |}
-    ["Revealed type [-1]: Revealed type for `self.property` is `B`."];
+    ["Revealed type [-1]: Revealed type for `self.property` is `B` (final)."];
   assert_type_errors
     {|
     import typing
@@ -1369,7 +1403,7 @@ let test_attribute_type_variable_resolution context =
     def foo(a : A) -> None:
       reveal_type(a.property)
   |}
-    ["Revealed type [-1]: Revealed type for `a.property` is `int`."];
+    ["Revealed type [-1]: Revealed type for `a.property` is `int` (final)."];
   assert_type_errors
     {|
     import typing
@@ -1381,7 +1415,7 @@ let test_attribute_type_variable_resolution context =
     def foo(a : A) -> None:
       reveal_type(a.property)
   |}
-    ["Revealed type [-1]: Revealed type for `a.property` is `str`."];
+    ["Revealed type [-1]: Revealed type for `a.property` is `str` (final)."];
   assert_type_errors
     {|
     import typing
@@ -1395,7 +1429,9 @@ let test_attribute_type_variable_resolution context =
     def foo(a : A) -> None:
       reveal_type(a.property)
   |}
-    ["Revealed type [-1]: Revealed type for `a.property` is `typing.Callable[[int], bool]`."];
+    [
+      "Revealed type [-1]: Revealed type for `a.property` is `typing.Callable[[int], bool]` (final).";
+    ];
   assert_type_errors
     {|
       import typing
@@ -1457,7 +1493,7 @@ let test_attribute_type_variable_resolution context =
     class Foo(metaclass=FooMeta): ...
     reveal_type(Foo.__members__)
   |}
-    ["Revealed type [-1]: Revealed type for `test.Foo.__members__` is `Foo`."];
+    ["Revealed type [-1]: Revealed type for `test.Foo.__members__` is `Foo` (final)."];
   assert_type_errors
     {|
     import typing

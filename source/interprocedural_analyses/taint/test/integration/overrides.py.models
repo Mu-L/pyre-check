@@ -431,15 +431,15 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{object::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 0 }
+            ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -449,7 +449,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -461,15 +461,15 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.A::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 1 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -479,7 +479,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -491,7 +491,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.A::methodA}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -508,23 +507,22 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.B::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 1 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -534,7 +532,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -546,7 +544,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.B::classMethod}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -563,8 +560,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -587,24 +583,22 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.Base::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 0 }
+            ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -614,7 +608,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -626,7 +620,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.Base::classMethod}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -643,15 +636,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.Base::methodA}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -675,7 +666,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -702,24 +693,22 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.C::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 2 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -729,7 +718,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -741,7 +730,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.C::methodA}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -765,7 +753,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -776,15 +764,15 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.D::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 3 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -794,7 +782,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -806,7 +794,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.D::methodA}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -830,7 +817,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -857,24 +844,20 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "Ovr{overrides.OverloadedOverride::methodA}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -885,8 +868,6 @@
   "kind": "model",
   "data": {
     "callable": "overrides.A.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
@@ -894,7 +875,9 @@
           {
             "decl": null,
             "tito": [ { "line": 32, "start": 35, "end": 38 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 1 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -905,7 +888,7 @@
           {
             "decl": null,
             "tito": [ { "line": 32, "start": 8, "end": 25 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -917,7 +900,6 @@
   "kind": "model",
   "data": {
     "callable": "overrides.A.methodA",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -934,16 +916,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "overrides.B.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
@@ -951,7 +930,9 @@
           {
             "decl": null,
             "tito": [ { "line": 42, "start": 35, "end": 38 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 1 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -962,7 +943,7 @@
           {
             "decl": null,
             "tito": [ { "line": 42, "start": 8, "end": 25 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -974,7 +955,6 @@
   "kind": "model",
   "data": {
     "callable": "overrides.B.classMethod",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -991,8 +971,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -1015,24 +994,22 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "overrides.Base.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -1041,7 +1018,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1052,8 +1029,6 @@
   "kind": "model",
   "data": {
     "callable": "overrides.C.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
@@ -1061,7 +1036,9 @@
           {
             "decl": null,
             "tito": [ { "line": 56, "start": 32, "end": 35 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 2 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -1072,7 +1049,7 @@
           {
             "decl": null,
             "tito": [ { "line": 56, "start": 8, "end": 22 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -1084,8 +1061,6 @@
   "kind": "model",
   "data": {
     "callable": "overrides.D.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
@@ -1093,7 +1068,9 @@
           {
             "decl": null,
             "tito": [ { "line": 68, "start": 32, "end": 35 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "[r]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[r]", "depth": 3 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -1104,7 +1081,7 @@
           {
             "decl": null,
             "tito": [ { "line": 68, "start": 8, "end": 22 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -1116,7 +1093,6 @@
   "kind": "model",
   "data": {
     "callable": "overrides.D.methodA",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -1133,8 +1109,7 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
@@ -1157,16 +1132,13 @@
           }
         ]
       }
-    ],
-    "sinks": [],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "overrides.ExtendsSkipped.method",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(arg)",
@@ -1183,23 +1155,20 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "overrides.OverloadedOverride.methodA",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -1210,19 +1179,18 @@
   "kind": "model",
   "data": {
     "callable": "overrides.SkippedOverrides.method",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(arg)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
-    ]
+    ],
+    "modes": [ "SkipOverrides" ]
   }
 }
 {
@@ -1250,7 +1218,6 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(cls)",
@@ -1258,7 +1225,7 @@
           {
             "decl": null,
             "tito": [ { "line": 158, "start": 11, "end": 14 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]

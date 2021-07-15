@@ -149,14 +149,15 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(y)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[y]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[y]", "depth": 0 }
+            ],
             "features": [ { "always-type": "scalar" } ]
           }
         ]
@@ -166,7 +167,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -178,15 +179,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{constructors.BothNewAndInit::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -197,7 +196,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{constructors.ChildWithNew::__new__}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(input)",
@@ -221,7 +219,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "always-via": "obscure" } ]
           }
         ]
@@ -255,14 +253,15 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(y)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[y]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[y]", "depth": 0 }
+            ],
             "features": [ { "always-type": "scalar" } ]
           }
         ]
@@ -272,7 +271,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -284,15 +283,13 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{constructors.ParentWithInit::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -303,8 +300,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{constructors.SomeAPI::__init__}",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(oauth_token_secret)",
@@ -312,7 +307,11 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[oauth_token_secret]" }
+              {
+                "kind": "LocalReturn",
+                "name": "[oauth_token_secret]",
+                "depth": 0
+              }
             ]
           }
         ]
@@ -322,7 +321,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[oauth_token]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[oauth_token]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -331,7 +332,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -359,14 +360,13 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -409,7 +409,6 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(oauth_token_secret)",
@@ -417,7 +416,11 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[oauth_token_secret]" }
+              {
+                "kind": "LocalReturn",
+                "name": "[oauth_token_secret]",
+                "depth": 0
+              }
             ]
           }
         ]
@@ -427,7 +430,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[y]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[y]", "depth": 0 }
+            ],
             "features": [ { "always-type": "scalar" } ]
           }
         ]
@@ -437,7 +442,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[oauth_token]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[oauth_token]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -446,7 +453,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -458,7 +465,6 @@
   "kind": "model",
   "data": {
     "callable": "Ovr{type::__new__}",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(input)",
@@ -482,7 +488,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "always-via": "obscure" } ]
           }
         ]
@@ -511,14 +517,13 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -529,15 +534,13 @@
   "kind": "model",
   "data": {
     "callable": "constructors.BothNewAndInit.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -548,7 +551,6 @@
   "kind": "model",
   "data": {
     "callable": "constructors.ChildWithNew.__new__",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(input)",
@@ -573,7 +575,7 @@
           {
             "decl": null,
             "tito": [ { "line": 57, "start": 30, "end": 33 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "always-via": "obscure" } ]
           }
         ]
@@ -607,14 +609,15 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(y)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[y]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[y]", "depth": 0 }
+            ],
             "features": [ { "always-type": "scalar" } ]
           }
         ]
@@ -625,7 +628,7 @@
           {
             "decl": null,
             "tito": [ { "line": 83, "start": 8, "end": 15 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ],
             "features": [ { "via": "tito" } ]
           }
         ]
@@ -637,15 +640,13 @@
   "kind": "model",
   "data": {
     "callable": "constructors.ParentWithInit.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -656,8 +657,6 @@
   "kind": "model",
   "data": {
     "callable": "constructors.SomeAPI.__init__",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(oauth_token_secret)",
@@ -665,7 +664,11 @@
           {
             "decl": null,
             "leaves": [
-              { "kind": "LocalReturn", "name": "[oauth_token_secret]" }
+              {
+                "kind": "LocalReturn",
+                "name": "[oauth_token_secret]",
+                "depth": 0
+              }
             ]
           }
         ]
@@ -675,7 +678,9 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "[oauth_token]" } ]
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[oauth_token]", "depth": 0 }
+            ]
           }
         ]
       },
@@ -684,7 +689,7 @@
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -695,7 +700,6 @@
   "kind": "model",
   "data": {
     "callable": "constructors.SomeAPI.async_get_authenticated_user",
-    "sources": [],
     "sinks": [
       {
         "port": "formal(self)[AUTHENTICATE_URL]",
@@ -711,16 +715,13 @@
           }
         ]
       }
-    ],
-    "tito": []
+    ]
   }
 }
 {
   "kind": "model",
   "data": {
     "callable": "constructors.SomeAPI.from_default_keys",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(oauth_token_secret)",
@@ -729,7 +730,11 @@
             "decl": null,
             "tito": [ { "line": 20, "start": 32, "end": 50 } ],
             "leaves": [
-              { "kind": "LocalReturn", "name": "[oauth_token_secret]" }
+              {
+                "kind": "LocalReturn",
+                "name": "[oauth_token_secret]",
+                "depth": 1
+              }
             ],
             "features": [ { "always-via": "tito" } ]
           }
@@ -741,7 +746,9 @@
           {
             "decl": null,
             "tito": [ { "line": 20, "start": 19, "end": 30 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "[oauth_token]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[oauth_token]", "depth": 1 }
+            ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -752,7 +759,7 @@
           {
             "decl": null,
             "tito": [ { "line": 20, "start": 15, "end": 18 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ],
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 1 } ],
             "features": [ { "always-via": "tito" } ]
           }
         ]
@@ -781,14 +788,13 @@
         ]
       }
     ],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(self)",
         "taint": [
           {
             "decl": null,
-            "leaves": [ { "kind": "LocalReturn", "name": "" } ]
+            "leaves": [ { "kind": "LocalReturn", "name": "", "depth": 0 } ]
           }
         ]
       }
@@ -799,8 +805,6 @@
   "kind": "model",
   "data": {
     "callable": "constructors.test_construction",
-    "sources": [],
-    "sinks": [],
     "tito": [
       {
         "port": "formal(request)[POST][1]",
@@ -808,7 +812,9 @@
           {
             "decl": null,
             "tito": [ { "line": 32, "start": 41, "end": 50 } ],
-            "leaves": [ { "kind": "LocalReturn", "name": "[oauth_token]" } ],
+            "leaves": [
+              { "kind": "LocalReturn", "name": "[oauth_token]", "depth": 2 }
+            ],
             "features": [
               { "has": "first-index" },
               { "first-index": "<numeric>" },
@@ -824,7 +830,11 @@
             "decl": null,
             "tito": [ { "line": 32, "start": 52, "end": 61 } ],
             "leaves": [
-              { "kind": "LocalReturn", "name": "[oauth_token_secret]" }
+              {
+                "kind": "LocalReturn",
+                "name": "[oauth_token_secret]",
+                "depth": 2
+              }
             ],
             "features": [
               { "has": "first-index" },
